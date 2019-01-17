@@ -204,7 +204,8 @@ def augment_for_one_image(annotation_line, size):
         resized_im = resized_im[:, ::-1, :]
     
     if config.enable_blur:
-        kernel_size = npr.randint(-5,4)*2+1
+        #kernel_size = npr.randint(-5,4)*2+1
+        kernel_size = npr.randint(-5,13)*2+1
         if kernel_size >= 3:
             blur_im = cv2.GaussianBlur(resized_im,(kernel_size,kernel_size),0)
             resized_im = blur_im
