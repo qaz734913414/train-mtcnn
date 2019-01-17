@@ -19,7 +19,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 **两种Rnet（原版Rnet计算量为1.5M）**
 
-| 模型名称                                                        | 输入尺寸     | 计算量（不计bbox）| 训练时精度      | pooling个数 |  备注                |
+| 模型名称                                                        | 输入尺寸     | 计算量            | 训练时精度      | pooling个数 |  备注                |
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
 | [Rnet_v1]()    | 24x24      | 0.5 M            | 待测     |     0       | 对标原版Rnet         |
 | [Rnet_v2]()    | 24x24      | 1.4 M            | 待测     |     0       |                      |
