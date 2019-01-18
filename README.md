@@ -2,7 +2,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 训练环境windows 7/10, 其他环境未测试
 
-**六种Pnet20（原版Pnet等价计算量为43.7M）**
+**九种Pnet20（原版Pnet等价计算量为43.7M）**
 
 | 模型名称                                                        | 输入尺寸     | 计算量（不计bbox）| 训练时精度      | pooling个数 |  备注                |
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
@@ -16,7 +16,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | [~~Pnet20_v7~~]()| ~~320x240~~  | ~~91.1 M~~        | ~~0.952-0.958~~ |     ~~2~~   | ~~性价比不如v6~~     |
 | [Pnet20_v8]()    | 320x240      | 109.4 M           | 0.954-0.958     |     0       |                      |
 
-**两种Pnet20_s2（原版Pnet等价计算量为43.7M）**
+**三种Pnet20_s2（训练用的样本与上面并不相同）**
 
 | 模型名称                                                        | 输入尺寸     | 计算量（不计bbox）| 训练时精度      | pooling个数 |  备注                |
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
