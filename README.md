@@ -22,6 +22,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
 | [Pnet20_s2v1]()    | 320x240      | 52.1 M            | 待测     |     0       |        stride=2              |
 | [Pnet20_s2v2]()    | 320x240      | 91.6 M            | 待测     |     0       |        stride=2              |
+| [Pnet20_s2v3]()    | 320x240      | 147.9 M           | 待测     |     0       |        stride=2              |
 
 **两种Rnet（原版Rnet计算量为1.5M）**
 
