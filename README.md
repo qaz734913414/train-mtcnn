@@ -22,7 +22,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
 | [Pnet20_s2v1]()    | 320x240      | 52.1 M            | 待测     |     0       |        stride=2              |
 | [Pnet20_s2v2]()    | 320x240      | 91.6 M            | 待测     |     0       |        stride=2              |
-| [Pnet20_s2v3]()    | 320x240      | 147.9 M           | 待测     |     0       |        stride=2              |
+| [Pnet20_s2v3]()    | 320x240      | 147.9 M           | 0.940-0.946     |     0       |        stride=2              |
 
 **两种Rnet（原版Rnet计算量为1.5M）**
 
@@ -30,6 +30,14 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
 | [Rnet_v1]()    | 24x24      | 0.5 M            | 0.943-0.948     |     0       | 对标原版Rnet         |
 | [Rnet_v2]()    | 24x24      | 1.4 M            | 0.957-0.962     |     0       |                      |
+
+**三种Onet（原版Onet计算量为12.6M）**
+
+| 模型名称                                                        | 输入尺寸     | 计算量            | 训练时精度      | pooling个数 |  备注                |
+| --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
+| [Onet_v1]()    | 48x48      | 2.0 M            | 待测            |     0       |         不含landmark         |
+| [Onet_v2]()    | 48x48      | 3.2 M            | 0.961-0.967     |     0       |         不含landmark         |
+| [Onet_v3]()    | 48x48      | 8.4 M            | 待测            |     0       |         不含landmark         |
 
 # 基本说明
 
