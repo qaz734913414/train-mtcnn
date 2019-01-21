@@ -244,7 +244,7 @@ def gen_data(size=20, base_num = 1, prob_thresh = 0.3, thread_num = 4):
 def parse_args():
     parser = argparse.ArgumentParser(description='Train proposal net',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--size', dest='size', help='20 or 24 or 48', default='20', type=str)
+    parser.add_argument('--size', dest='size', help='20(or 16) or 24 or 48', default='20', type=str)
     parser.add_argument('--base_num', dest='base_num', help='base num', default='1', type=str)
     parser.add_argument('--prob_thresh', dest='prob_thresh', help='prob thresh', default='0.3', type=str)
     parser.add_argument('--thread_num', dest='thread_num', help='thread num', default='4', type=str)

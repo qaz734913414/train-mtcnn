@@ -6,6 +6,56 @@ import negativemining_onlylandmark10
 import negativemining_onlylandmark106
 from config import config
 
+#def P_Net16_v1(mode='train'):
+def P_Net16(mode='train'):
+    """
+    #Proposal Network
+    #input shape 3 x 16 x 16
+    """
+    data = mx.symbol.Variable(name="data")
+    bbox_target = mx.symbol.Variable(name="bbox_target")
+    label = mx.symbol.Variable(name="label")
+    
+    conv1 = mx.symbol.Convolution(data=data, kernel=(2, 2), num_filter=8, name="conv1")#16/15
+    prelu1 = mx.symbol.LeakyReLU(data=conv1, act_type="prelu", name="prelu1")
+
+    conv2_dw = mx.symbol.Convolution(data=prelu1, kernel=(3, 3), stride=(2,2), num_filter=8, num_group=8, name="conv2_dw")#15/7
+    prelu2_dw = mx.symbol.LeakyReLU(data=conv2_dw, act_type="prelu", name="prelu2_dw")
+    conv2_sep = mx.symbol.Convolution(data=prelu2_dw, kernel=(1, 1), num_filter=16, name="conv2_sep")
+    prelu2 = mx.symbol.LeakyReLU(data=conv2_sep, act_type="prelu", name="prelu2")
+    
+    conv3_dw = mx.symbol.Convolution(data=prelu2, kernel=(3, 3),stride=(2,2), num_filter=16, num_group=16, name="conv3_dw")#7/3
+    prelu3_dw = mx.symbol.LeakyReLU(data=conv3_dw, act_type="prelu", name="prelu3_dw")
+    conv3_sep = mx.symbol.Convolution(data=prelu3_dw, kernel=(1, 1), num_filter=24, name="conv3_sep")
+    prelu3 = mx.symbol.LeakyReLU(data=conv3_sep, act_type="prelu", name="prelu3")
+
+    conv4_dw = mx.symbol.Convolution(data=prelu3, kernel=(3, 3), num_filter=24, num_group=24, name="conv4_dw")#3/1
+    prelu4_dw = mx.symbol.LeakyReLU(data=conv4_dw, act_type="prelu", name="prelu4_dw")
+
+    conv4_1 = mx.symbol.Convolution(data=prelu4_dw, kernel=(1, 1), num_filter=2, name="conv4_1")
+    bn4_1 = mx.sym.BatchNorm(data=conv4_1, name='bn4_1', fix_gamma=False,momentum=0.9)
+    conv4_2 = mx.symbol.Convolution(data=prelu4_dw, kernel=(1, 1), num_filter=4, name="conv4_2")
+    bn4_2 = mx.sym.BatchNorm(data=conv4_2, name='bn4_2', fix_gamma=False,momentum=0.9)
+    if mode == 'test':
+        cls_prob = mx.symbol.SoftmaxActivation(data=bn4_1, mode="channel", name="cls_prob")
+        bbox_pred = bn4_2
+        group = mx.symbol.Group([cls_prob, bbox_pred])
+        
+    else:
+        conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
+        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
+                                           multi_output=True, use_ignore=True,
+                                           name="cls_prob")
+        conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
+        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+                                                     grad_scale=1, name="bbox_pred")
+
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+                               op_type='negativemining', name="negative_mining")
+        
+        group = mx.symbol.Group([out])
+    return group
+
 #def P_Net20_v0(mode='train'):
 def P_Net20(mode='train'):
     """
@@ -889,7 +939,7 @@ def O_Net(mode="train", with_landmark = False):
         conv6_2 = mx.symbol.FullyConnected(data=prelu6_dw, num_hidden=4, name="conv6_2")	
         bn6_2 = mx.sym.BatchNorm(data=conv6_2, name='bn6_2', fix_gamma=False,momentum=0.9)
         if mode == "test":
-            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel", name="cls_prob")
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1,  name="cls_prob")
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:
@@ -1005,7 +1055,7 @@ def O_Net_v2(mode="train", with_landmark = False):
         conv6_2 = mx.symbol.FullyConnected(data=prelu6_dw, num_hidden=4, name="conv6_2")	
         bn6_2 = mx.sym.BatchNorm(data=conv6_2, name='bn6_2', fix_gamma=False,momentum=0.9)
         if mode == "test":
-            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel", name="cls_prob")
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1,  name="cls_prob")
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:
@@ -1136,7 +1186,7 @@ def O_Net_v3(mode="train", with_landmark = False):
         conv6_2 = mx.symbol.FullyConnected(data=prelu9_dw, num_hidden=4, name="conv6_2")	
         bn6_2 = mx.sym.BatchNorm(data=conv6_2, name='bn6_2', fix_gamma=False,momentum=0.9)
         if mode == "test":
-            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel", name="cls_prob")
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, name="cls_prob")
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:

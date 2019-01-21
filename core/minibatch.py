@@ -56,7 +56,7 @@ def get_minibatch_thread(imdb, num_classes, im_size, with_type, with_cls, with_b
     return processed_ims, cls_label, type_label, bbox_reg_target, landmark_reg_target
 
 def get_minibatch(imdb, num_classes, im_size, with_type, with_cls, with_bbox, with_landmark, thread_num = 4):
-    # im_size: 12, 24 or 48
+    # im_size: 16/20, 24 or 48
     #flag = np.random.randint(3,size=1)
     num_images = len(imdb)
     thread_num = max(2,thread_num)

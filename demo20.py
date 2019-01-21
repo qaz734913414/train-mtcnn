@@ -35,9 +35,11 @@ def test_net(imgfile,prefix, epoch, batch_size, ctx,
 
     img = cv2.imread(imgfile)
     t1 = time.time()
-
+    print 'hello1'
     boxes, boxes_c = mtcnn_detector.detect_pnet20(img)
+    print 'hello2'
     boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
+    print 'hello3'
     boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
     print 'time: ',time.time() - t1
@@ -59,7 +61,7 @@ def parse_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--imgfile', dest='imgfile', help='image filename', 
                         default='4.jpg', type=str)
-    parser.add_argument('--prefix', dest='prefix', help='prefix of model name', nargs="+",
+    parser.add_argument('--prefix', dest='prefix', help='prefix of model name', 
                         default='model/pnet20_hard,model/rnet,model/onet', type=str)
     parser.add_argument('--epoch', dest='epoch', help='epoch number of model to load',
                         default='16,16,16', type=str)

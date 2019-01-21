@@ -96,7 +96,7 @@ def gen_imglist(size=20, base_num=1, with_hard=False, with_landmark=False):
 def parse_args():
     parser = argparse.ArgumentParser(description='Train proposal net',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--size', dest='size', help='20 or 24 or 48', default='20', type=str)
+    parser.add_argument('--size', dest='size', help='20(or 16) or 24 or 48', default='20', type=str)
     parser.add_argument('--base_num', dest='base_num', help='base num', default='1', type=str)
     parser.add_argument('--with_hard', dest='with_hard', help='with_hard', action='store_true')
     parser.add_argument('--with_landmark', dest='with_landmark', help='with_landmark', action='store_true')
