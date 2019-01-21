@@ -452,7 +452,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
             # pnet
             if self.pnet_detector:
-                boxes, boxes_c = self.detect_pnet20(im)
+                boxes, boxes_c = self.detect_pnet16(im)
                 if boxes_c is None:
                     all_boxes.append(np.array([]))
                     batch_idx += 1
