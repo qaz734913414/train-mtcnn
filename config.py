@@ -17,6 +17,7 @@ config.EPS = 1e-14
 config.enable_gray = True
 config.enable_blur = True
 config.use_landmark10 = False
+config.landmark106_select23 = False
 config.min_rot_angle = -45
 config.max_rot_angle = 45
 config.landmark_img_set = 'img_cut_celeba'
