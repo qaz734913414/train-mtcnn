@@ -6,7 +6,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 | 模型名称                                                        | 输入尺寸     | 计算量（不计bbox）| 训练时精度      | pooling个数 |  备注                |
 | --------                                                        | ------       | ------------      | -----------     | ----------- | -------------------- |
-| [Pnet20_v00]()   | 320x240      | 8.5 M             | 待测            |     0       | 对标libfacedetection |
+| [Pnet20_v00]()   | 320x240      | 8.5 M             | 0.888-0.894     |     0       | 对标libfacedetection |
 | [Pnet20_v0]()    | 320x240      | 11.6 M            | 0.900-0.908     |     0       | 对标libfacedetection |
 | [Pnet20_v1]()    | 320x240      | 14.6 M            | 0.915-0.920     |     0       |                      |
 | [Pnet20_v2]()    | 320x240      | 18.4 M            | 0.928-0.933     |     0       | 对标原版pnet         |
@@ -46,22 +46,25 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------   | ------     | ------------     | -----------     | ----------- | -------------------- |
 | Onet_v1    | 48x48      | 2.0 M            | 0.947-0.954     |     0       | 不含landmark         |
 | Onet_v2    | 48x48      | 3.2 M            | 0.961-0.967     |     0       | 不含landmark         |
-| Onet_v3    | 48x48      | 8.7 M            | 待测            |     0       | 不含landmark         |
+| Onet_v3    | 48x48      | 8.7 M            | 0.979-0.985     |     0       | 不含landmark         |
 
 **两种Lnet（原版Onet计算量为12.6M）**
 
 | 模型名称   | 输入尺寸   | 计算量            | 训练时L2   | 训练时L1    |  备注                |
 | --------   | ------     | ------------      | -----------| ----------- | -------------------- |
 | Lnet_v1    | 48x48      |  3.3 M            | 约0.0021   | 约0.032     | lnet_basenum=16      |
-| Lnet_v2    | 48x48      | 10.5 M            | 约0.0016   | 约0.026     | lnet_basenum=32      |
+| Lnet_v1    | 48x48      | 10.5 M            | 约0.0016   | 约0.026     | lnet_basenum=32      |
+| Lnet_v2    | 48x48      |  3.3 M            | 待测       | 待测        | lnet_basenum=16      |
+| Lnet_v2    | 48x48      | 10.5 M            | 待测       | 待测        | lnet_basenum=32      |
 
 **三种Lnet106**
 
 | 模型名称      | 输入尺寸   | 计算量            | 训练时L2   | 训练时L1    |  备注                |
 | --------      | ------     | ------------      | -----------| ----------- | -------------------- |
-| Lnet106_v1    | 48x48      |  3.3 M            | 待测       | 待测        | lnet_basenum=16      |
+| Lnet106_v1    | 48x48      | 10.6 M            | 待测       | 待测        | lnet_basenum=32      |
+| Lnet106_v1    | 48x48      | 36.8 M            | 待测       | 待测        | lnet_basenum=64      |
 | Lnet106_v2    | 48x48      | 10.6 M            | 待测       | 待测        | lnet_basenum=32      |
-| Lnet106_v3    | 48x48      | 36.8 M            | 待测       | 待测        | lnet_basenum=64      |
+| Lnet106_v2    | 48x48      | 36.8 M            | 待测       | 待测        | lnet_basenum=64      |
 
 # 基本说明
 
@@ -69,9 +72,9 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 **(2)Pnet改为Pnet20需要在你的MTCNN中更改cell_size=20, stride=4**
 
-	1920*1080图像找20脸，第一层Pnet20输入尺寸1920x1080，计算量347.9M，原版Pnet输入1152x648，计算量1278.0M
+	1920*1080图像找20脸，第一层Pnet20_v0输入尺寸1920x1080，计算量324.6M，原版Pnet输入1152x648，计算量1278.0M
 
-**(3)Rnet保持size=24不变，网络结构变为dw+sep，计算量约为原版1/3**
+**(3)Rnet保持size=24不变，v1计算量约为原版1/3**
 
 **(4)Onet带landmark我没有训练成功过**
 
