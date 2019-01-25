@@ -30,7 +30,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | 模型名称     | 输入尺寸     | 计算量（不计bbox）| 训练时精度      | pooling个数 |  备注                |
 | --------     | ------       | ------------      | -----------     | ----------- | -------------------- |
 | Pnet16_v0    | 256x192      | 7.5 M             | 0.857-0.865     |     0       |         stride=4     |
-| Pnet16_v1    | 256x192      | 9.8 M             | 待测            |     0       |         stride=4     |
+| Pnet16_v1    | 256x192      | 9.8 M             | 0.873-0.879     |     0       |         stride=4     |
 
 
 **两种Rnet（原版Rnet计算量为1.5M）**
@@ -54,8 +54,8 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------   | ------     | ------------      | -----------| ----------- | -------------------- |
 | Lnet_v1    | 48x48      |  3.3 M            | 约0.0021   | 约0.032     | lnet_basenum=16      |
 | Lnet_v1    | 48x48      | 10.5 M            | 约0.0016   | 约0.026     | lnet_basenum=32      |
-| Lnet_v2    | 48x48      |  3.3 M            | 待测       | 待测        | lnet_basenum=16      |
-| Lnet_v2    | 48x48      | 10.5 M            | 待测       | 待测        | lnet_basenum=32      |
+| Lnet_v2    | 48x48      |  3.5 M            | 待测       | 待测        | lnet_basenum=16      |
+| Lnet_v2    | 48x48      | 10.8 M            | 待测       | 待测        | lnet_basenum=32      |
 
 **三种Lnet106**
 
