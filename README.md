@@ -59,12 +59,13 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 **三种Lnet106**
 
-| 模型名称      | 输入尺寸   | 计算量            | 训练时L2   | 训练时L1    |  备注                   |
-| --------      | ------     | ------------      | -----------| ----------- | --------------------    |
-| Lnet106_v1    | 48x48      | 10.6 M            | 待测       | 待测        | lnet106_basenum=32      |
-| Lnet106_v1    | 48x48      | 36.8 M            | 待测       | 待测        | lnet106_basenum=64      |
-| Lnet106_v2    | 48x48      | 10.6 M            | 待测       | 待测        | lnet106_basenum=32      |
-| Lnet106_v2    | 48x48      | 36.8 M            | 待测       | 待测        | lnet106_basenum=64      |
+| 模型名称      | 输入尺寸   | 计算量            | 训练时L2      | 训练时L1    |  备注                   |
+| --------      | ------     | ------------      | -----------   | ----------- | --------------------    |
+| Lnet106_v1    | 48x48      | 10.6 M            | 待测          | 待测        | lnet106_basenum=32      |
+| Lnet106_v1    | 48x48      | 36.8 M            | 待测          | 待测        | lnet106_basenum=64      |
+| [Lnet106_v2](https://pan.baidu.com/s/1D3G3oGzxODPw8dZahqiNIA)    | 48x48      | 10.9 M            | 0.0030-0.0036 | 0.040-0.043 | lnet106_basenum=32      |
+| [Lnet106_v2](https://pan.baidu.com/s/1Ym_N07hJZqc_jFlgXByDHQ)    | 48x48      | 37.4 M            | 0.0019-0.0024 | 0.032-0.036 | lnet106_basenum=64      |
+| Lnet106_v2    | 48x48      | 137.4 M           | 0.0017-0.0024 | 0.032-0.036 | lnet106_basenum=128     |
 
 # 基本说明
 
