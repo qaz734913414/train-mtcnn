@@ -4,7 +4,7 @@ import sys,os
 sys.path.append(os.getcwd())
 from core.imdb_onlylandmark106 import IMDB
 from train_onlylandmark106 import train_net
-from core.symbol import L106_Net
+from core.symbol import L106_Net96
 
 def train_L_net(image_set, root_path, dataset_path, prefix, ctx,
                 pretrained, epoch, begin_epoch, end_epoch, batch_size, thread_num, 
