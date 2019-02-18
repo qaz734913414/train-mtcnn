@@ -57,7 +57,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | [Lnet_v2](https://pan.baidu.com/s/1W6bxNeD0psxwxbou_xwK-g)    | 48x48      |  3.5 M            | 约0.0014   | 约0.027     | lnet_basenum=16      |
 | [Lnet_v2](https://pan.baidu.com/s/1e3tuwrR3AoU_zRKkIFK8xg)    | 48x48      | 10.8 M            | 约0.0012   | 约0.025     | lnet_basenum=32      |
 
-**三种Lnet106**
+**两种Lnet106**
 
 | 模型名称      | 输入尺寸   | 计算量            | 训练时L2      | 训练时L1    |  备注                   |
 | --------      | ------     | ------------      | -----------   | ----------- | --------------------    |
