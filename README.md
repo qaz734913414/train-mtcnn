@@ -71,10 +71,10 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 | 模型名称      | 输入尺寸   | 计算量            | 训练时L2      | 训练时L1    |  备注                   |
 | --------      | ------     | ------------      | -----------   | ----------- | --------------------    |
-| Lnet106_96_v1 | 96x96      | 38.6 M            | 待测          | 待测        | lnet106_basenum=32      |
+| Lnet106_96_v1 | 96x96      | 38.6 M            | 0.0014-0.0019 | 0.028-0.032 | lnet106_basenum=32      |
 | Lnet106_96_v1 | 96x96      | 131.8 M           | 待测          | 待测        | lnet106_basenum=64      |
-| Lnet106_96_v2 | 96x96      | 10.9 M            | 待测          | 待测        | lnet106_basenum=32      |
-| Lnet106_96_v2 | 96x96      | 37.4 M            | 待测          | 待测        | lnet106_basenum=64      |
+| Lnet106_96_v2 | 96x96      | 40.0 M            | 0.0013-0.0017 | 0.028-0.031 | lnet106_basenum=32      |
+| Lnet106_96_v2 | 96x96      | 134.6 M           | 0.0012-0.0015 | 0.027-0.030 | lnet106_basenum=64      |
 
 # 基本说明
 
@@ -235,5 +235,23 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 
 	config.landmark_img_set = 'Training_data106'
 	
+双击L_train_onlylandmark106.bat开始训练
+
+**新的数据[106data_merge](https://pan.baidu.com/s/1PsOFqZeQoFK06MlPmgZxFw)**
+
+解压后目录结构应为
+
+	data/106data_merge/AFW
+	data/106data_merge/HELEN
+	data/106data_merge/IBUG
+	data/106data_merge/LFPW
+	data/106data_merge/clean0
+	
+将 data/106data_merge/106data_merge.txt拷贝到data/mtcnn/imglists/106data_merge.txt， 在config.py设置
+
+	config.landmark_img_set = '106data_merge'
+	
+更改L_train_onlylandmark106.bat中参数--image_set landmark106 为 --image_set 106data_merge
+
 双击L_train_onlylandmark106.bat开始训练
 
