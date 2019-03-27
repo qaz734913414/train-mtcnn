@@ -78,7 +78,7 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | Lnet106_96_v2 | 96x96      | 42.8 M               | 0.0013-0.0017 | 0.028-0.031 | lnet106_basenum=32      |
 | Lnet106_96_v2 | 96x96      | 140.2 M              | 0.0012-0.0015 | 0.027-0.030 | lnet106_basenum=64      |
 
-使用数据106data_merge训练
+**使用数据106data_merge训练**
 
 | 模型名称      | 输入尺寸   | 计算量(merge bn之后) | 训练时L2      | 训练时L1    |  备注                   |
 | --------      | ------     | ------------         | -----------   | ----------- | --------------------    |
