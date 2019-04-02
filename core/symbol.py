@@ -1537,7 +1537,106 @@ def L_Net_v2(mode="train"):
         
     return group
 	
+#def L_Net64_v3(mode="train"):
+def L_Net64(mode="train"):
+    """
+    Refine Network
+    input shape 3 x 64 x 64
+    """
+    data = mx.symbol.Variable(name="data")
+    landmark_target = mx.symbol.Variable(name="landmark_target")
+    
+    conv1 = mx.symbol.Convolution(data=data, kernel=(2, 2), num_filter=lnet_basenum, name="conv1") #64/63
+    bn1 = mx.sym.BatchNorm(data=conv1, name='bn1', fix_gamma=False,momentum=0.9)
+    prelu1 = mx.symbol.LeakyReLU(data=bn1, act_type="prelu", name="prelu1")
+    
+    conv2_dw = mx.symbol.Convolution(data=prelu1, kernel=(3, 3), stride=(2, 2), num_filter=lnet_basenum, num_group=lnet_basenum, name="conv2_dw") #63/31
+    bn2_dw = mx.sym.BatchNorm(data=conv2_dw, name='bn2_dw', fix_gamma=False,momentum=0.9)
+    prelu2_dw = mx.symbol.LeakyReLU(data=bn2_dw, act_type="prelu", name="prelu2_dw")
+    conv2_sep = mx.symbol.Convolution(data=prelu2_dw, kernel=(1, 1), num_filter=lnet_basenum*2, name="conv2_sep")
+    bn2_sep = mx.sym.BatchNorm(data=conv2_sep, name='bn2_sep', fix_gamma=False,momentum=0.9)
+    prelu2_sep = mx.symbol.LeakyReLU(data=bn2_sep, act_type="prelu", name="prelu2_sep")
+	
+    conv3_dw = mx.symbol.Convolution(data=prelu2_sep, kernel=(3, 3), stride=(2,2), num_filter=lnet_basenum*2, num_group=lnet_basenum*2, name="conv3_dw") #31/15
+    bn3_dw = mx.sym.BatchNorm(data=conv3_dw, name='bn3_dw', fix_gamma=False,momentum=0.9)
+    prelu3_dw = mx.symbol.LeakyReLU(data=bn3_dw, act_type="prelu", name="prelu3_dw")
+    conv3_sep = mx.symbol.Convolution(data=prelu3_dw, kernel=(1, 1), num_filter=lnet_basenum*4, name="conv3_sep")
+    bn3_sep = mx.sym.BatchNorm(data=conv3_sep, name='bn3_sep', fix_gamma=False,momentum=0.9)
+    prelu3_sep = mx.symbol.LeakyReLU(data=bn3_sep, act_type="prelu", name="prelu3_sep")
+    
+    conv4_dw = mx.symbol.Convolution(data=prelu3_sep, kernel=(3, 3), stride=(2,2), num_filter=lnet_basenum*4, num_group=lnet_basenum*4, name="conv4_dw") #15/7
+    bn4_dw = mx.sym.BatchNorm(data=conv4_dw, name='bn4_dw', fix_gamma=False,momentum=0.9)
+    prelu4_dw = mx.symbol.LeakyReLU(data=bn4_dw, act_type="prelu", name="prelu4_dw")
+    conv4_sep = mx.symbol.Convolution(data=prelu4_dw, kernel=(1, 1), num_filter=lnet_basenum*4, name="conv4_sep")
+    bn4_sep = mx.sym.BatchNorm(data=conv4_sep, name='bn4_sep', fix_gamma=False,momentum=0.9)
+    prelu4_sep = mx.symbol.LeakyReLU(data=bn4_sep, act_type="prelu", name="prelu4_sep")
 
+    conv5_dw = mx.symbol.Convolution(data=prelu4_sep, kernel=(3, 3), stride=(2,2), num_filter=lnet_basenum*4, num_group=lnet_basenum*4, name="conv5_dw") #7/3
+    bn5_dw = mx.sym.BatchNorm(data=conv5_dw, name='bn5_dw', fix_gamma=False,momentum=0.9)
+    prelu5_dw = mx.symbol.LeakyReLU(data=bn5_dw, act_type="prelu", name="prelu5_dw")
+    conv5_sep = mx.symbol.Convolution(data=prelu5_dw, kernel=(1, 1), num_filter=lnet_basenum*8, name="conv5_sep")
+    bn5_sep = mx.sym.BatchNorm(data=conv5_sep, name='bn5_sep', fix_gamma=False,momentum=0.9)
+    prelu5_sep = mx.symbol.LeakyReLU(data=bn5_sep, act_type="prelu", name="prelu5_sep")
+
+    conv6_dw = mx.symbol.Convolution(data=prelu5_sep, kernel=(3, 3), num_filter=lnet_basenum*8,num_group=lnet_basenum*8, name="conv6_dw") #3/1
+    bn6_dw = mx.sym.BatchNorm(data=conv6_dw, name='bn6_dw', fix_gamma=False,momentum=0.9)
+    prelu6_dw = mx.symbol.LeakyReLU(data=bn6_dw, act_type="prelu", name="prelu6_dw")
+    conv6_sep = mx.symbol.Convolution(data=prelu6_dw, kernel=(1, 1), num_filter=lnet_basenum*8, name="conv6_sep")
+    bn6_sep = mx.sym.BatchNorm(data=conv6_sep, name='bn6_sep', fix_gamma=False,momentum=0.9)
+    prelu6_sep = mx.symbol.LeakyReLU(data=bn6_sep, act_type="prelu", name="prelu6_sep")
+
+    conv6_3 = mx.symbol.FullyConnected(data=prelu6_sep, num_hidden=10, name="conv6_3")	
+    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
+    if mode == "test":
+        landmark_pred = bn6_3
+        group = mx.symbol.Group([landmark_pred])
+    else:
+        if config.use_landmark10:
+            target_x1 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=0, end=1)
+            target_x2 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=1, end=2)
+            target_x3 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=2, end=3)
+            target_x4 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=3, end=4)
+            target_x5 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=4, end=5)
+            target_y1 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=5, end=6)
+            target_y2 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=6, end=7)
+            target_y3 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=7, end=8)
+            target_y4 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=8, end=9)
+            target_y5 = mx.symbol.slice_axis(data = landmark_target, axis=1, begin=9, end=10)
+            bn_x1 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=0, end=1)
+            bn_x2 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=1, end=2)
+            bn_x3 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=2, end=3)
+            bn_x4 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=3, end=4)
+            bn_x5 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=4, end=5)
+            bn_y1 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=5, end=6)
+            bn_y2 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=6, end=7)
+            bn_y3 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=7, end=8)
+            bn_y4 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=8, end=9)
+            bn_y5 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=9, end=10)
+            pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
+            pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
+            pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
+            pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
+            pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
+            pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
+            pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
+            pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
+            pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
+            pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
+            out = mx.symbol.Custom(pred_x1=pred_x1,pred_x2=pred_x2,pred_x3=pred_x3,pred_x4=pred_x4,pred_x5=pred_x5,
+                                pred_y1=pred_y1,pred_y2=pred_y2,pred_y3=pred_y3,pred_y4=pred_y4,pred_y5=pred_y5,
+                                target_x1=target_x1,target_x2=target_x2,target_x3=target_x3,target_x4=target_x4,target_x5=target_x5,
+                                target_y1=target_y1,target_y2=target_y2,target_y3=target_y3,target_y4=target_y4,target_y5=target_y5,
+                                op_type='negativemining_onlylandmark10', name="negative_mining") 
+            group = mx.symbol.Group([out])
+        else:
+            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+                                                     grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+                                op_type='negativemining_onlylandmark', name="negative_mining")
+            group = mx.symbol.Group([out])
+        
+    return group
+	
 lnet106_basenum=32
 #def L106_Net_v1(mode="train"):
 def L106_Net(mode="train"):
