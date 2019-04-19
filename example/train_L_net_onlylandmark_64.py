@@ -17,20 +17,20 @@ def train_L_net(image_set, root_path, dataset_path, prefix, ctx,
               64, False, False, True, frequent, not resume, lr, lr_epoch)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train O_net(48-net)',
+    parser = argparse.ArgumentParser(description='Train L_Net64(64-net)',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--image_set', dest='image_set', help='training set',
-                        default='train_48l', type=str)
+                        default='img_cut_celeba', type=str)
     parser.add_argument('--root_path', dest='root_path', help='output data folder',
                         default='data', type=str)
     parser.add_argument('--dataset_path', dest='dataset_path', help='dataset folder',
                         default='data/mtcnn', type=str)
     parser.add_argument('--prefix', dest='prefix', help='new model prefix',
-                        default='model/lnet', type=str)
+                        default='model/lnet64', type=str)
     parser.add_argument('--gpus', dest='gpu_ids', help='GPU device to train with',
                         default='0', type=str)
     parser.add_argument('--pretrained', dest='pretrained', help='pretrained prefix',
-                        default='model/lnet', type=str)
+                        default='model/lnet64', type=str)
     parser.add_argument('--epoch', dest='epoch', help='load epoch',
                         default=0, type=int)
     parser.add_argument('--begin_epoch', dest='begin_epoch', help='begin epoch of training',
