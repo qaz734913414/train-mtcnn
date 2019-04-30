@@ -94,6 +94,13 @@ train mtcnn: a modified version by Zuo Qing from https://github.com/Seanlinx/mtc
 | --------      | ------     | ------------         | -----------   | ----------- | --------------------    |
 | Lnet106_64_v3 | 64x64      | 7.8 M                | 0.0026-0.0034 | 0.036-0.042 | lnet106_basenum=32      |
 
+**使用数据106data_merge_migu训练**
+
+| 模型名称      | 输入尺寸   | 计算量(merge bn之后) | 训练时L2      | 训练时L1    |  备注                   |
+| --------      | ------     | ------------         | -----------   | ----------- | --------------------    |
+| Lnet106_64_v3 | 64x64      | 7.8 M                | 0.0020-0.0027 | 0.032-0.037 | lnet106_basenum=32      |
+| Lnet106_96_v3 | 96x96      | 18.7 M               | 待测          | 待测        | lnet106_basenum=32      |
+
 # 基本说明
 
 **(1)请使用[ZQCNN_MTCNN](https://github.com/zuoqing1988/ZQCNN)来进行forward**
