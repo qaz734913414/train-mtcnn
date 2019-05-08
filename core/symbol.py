@@ -2154,11 +2154,11 @@ def L106_Net112(mode="train"):
     
 	#conv23 = 28X28
     conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*2, name="dconv23")
-    conv3 = Residual(conv23, num_block=3, num_out=res_base_dim*2, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*2, name="res3")
+    conv3 = Residual(conv23, num_block=2, num_out=res_base_dim*2, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*2, name="res3")
     
 	#conv34 = 14X14
     conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=5, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
+    conv4 = Residual(conv34, num_block=3, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
     
 	#conv45 = 7X7
     conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
