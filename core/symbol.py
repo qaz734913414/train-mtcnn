@@ -2145,7 +2145,7 @@ def L106_Net112(mode="train"):
     #input shape 3 x 112 x 112
     """
     data = mx.symbol.Variable(name="data")
-    label = mx.symbol.Variable(name="label")
+    landmark_target = mx.symbol.Variable(name="landmark_target")
     
     # data = 112X112
     # conv1 = 56X56
