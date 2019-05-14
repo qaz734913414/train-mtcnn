@@ -253,7 +253,7 @@ def parse_args():
     parser.add_argument('--thresh', dest='thresh', help='list of thresh for pnet, rnet, onet',
                         default='0.3,0.3,0.3', type=str)
     parser.add_argument('--min_face', dest='min_face', help='minimum face size for detection',
-                        default=24, type=int)
+                        default=20, type=int)
     parser.add_argument('--target_size', dest='target_size', help='target_size',
                         default=-1, type=int)
     parser.add_argument('--target_fold', dest='target_fold', help='target_fold',
