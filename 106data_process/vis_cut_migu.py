@@ -27,7 +27,7 @@ if __name__ == '__main__':
             
             for i in range(106):
                 cv2.circle(img, (int(landmarks[i*2]), int(landmarks[i*2+1])), 2, (255, 0, 0), -1)
-                cv2.imwrite(os.path.join(save_path, image_path),img)
+            cv2.imwrite(os.path.join(save_path, image_path),img)
             line_id = line_id+1
             if line_id%100 == 0:
                 print line_id			
