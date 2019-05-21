@@ -1,8 +1,4 @@
-"""
-Image visualization result for 106 landmarks
-Created by Jacky LUO
-Usage: python vis.py 
-"""
+
 import os
 import cv2
 import numpy as np
