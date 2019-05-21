@@ -23,11 +23,11 @@ if __name__ == '__main__':
     good_lists = list()
     for i in range(num_keep):
         cur_line = keep_lines[i].split('\n')[0]
-        cur_line = cur_line.replace('.jpg_','.jpg ')
-        cur_line = cur_line.replace('.jpeg_','.jpeg ')
-        cur_line = cur_line.replace('.JPG_','.JPG ')
-        cur_line = cur_line.replace('.JPEG_','.JPEG ')
-        splits = cur_line.split()
+        #cur_line = cur_line.replace('.jpg_','.jpg ')
+        #cur_line = cur_line.replace('.jpeg_','.jpeg ')
+        #cur_line = cur_line.replace('.JPG_','.JPG ')
+        #cur_line = cur_line.replace('.JPEG_','.JPEG ')
+        splits = cur_line.split('#')
         cur_file = splits[0]
         flag = int(splits[1])
         if flag == 1:
