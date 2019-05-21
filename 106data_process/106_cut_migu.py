@@ -11,12 +11,12 @@ def get_bbox(landmark):
     y2 = max(y_coords)
     return x1,y1, x2-x1, y2-y1
 	
-img_path = '../migu_106points/'
-out_img_path = '../migu_106points_cut/'
+img_path = 'D:/BaiduYunDownload'
+out_img_path = 'D:/BaiduYunDownload/celeba_cut500'
 
-with open('../migu_106points/cut_landmarks_migu.txt', 'r') as f:
+with open('celeba_part20.txt', 'r') as f:
     landmark_lines = f.readlines()
-f = open('../migu_106points_cut/cut_landmarks_migu.txt','w')
+f = open('D:/BaiduYunDownload/celeba_cut500/celeba_part20.txt','w')
 num = len(landmark_lines)
 for i in range(num):
     line = landmark_lines[i].split('\n')[0]
@@ -26,6 +26,8 @@ for i in range(num):
     height = img.shape[0]
     landmark = np.array(landmark_splits[1:213],dtype=np.float32)
     x1,y1,w,h = get_bbox(landmark)
+    if w < 112 or h < 112:
+        continue
     #print([x1,y1,w,h])
     off_x = int(max(0,x1-0.8*w))
     off_y = int(max(0,y1-0.5*h))
@@ -46,8 +48,8 @@ for i in range(num):
         cut_width = max_x-off_x
         cut_height = max_y-off_y
         cut_img = img[off_y:max_y,off_x:max_x,:]
-        if cut_width > 200 and cut_height > 200:
-            scale = 200.0/min(cut_width,cut_height)
+        if cut_width > 500 and cut_height > 500:
+            scale = 500.0/min(cut_width,cut_height)
             dst_width = int(cut_width*scale)
             dst_height = int(cut_height*scale)
             cut_img = cv2.resize(cut_img,(dst_width,dst_height),interpolation=cv2.INTER_LINEAR)
