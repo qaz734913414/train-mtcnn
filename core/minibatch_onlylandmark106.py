@@ -104,16 +104,19 @@ def augment_for_one_image(annotation_line, size):
             force_accept = 1
             break
         rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark106(cx,cy,landmark_x,landmark_y, cur_angle,1)
-        cur_size = int(npr.randint(10, 21)*0.1*bbox_size)
+        #cur_size = int(npr.randint(10, 21)*0.1*bbox_size)
+        cur_size = int(npr.randint(10, 16)*0.1*bbox_size)
         up_border_size = int(-cur_size*0.15)
         down_border_size = int(-cur_size*0.15)
         left_border_size = int(-cur_size*0.15)
         right_border_size = int(-cur_size*0.15)
 
         # delta here is the offset of box center
-        delta_x = npr.randint(-int(w * 0.35), int(w * 0.35)+1)
-        delta_y = npr.randint(-int(h * 0.35), int(h * 0.35)+1)
-
+        #delta_x = npr.randint(-int(w * 0.35), int(w * 0.35)+1)
+        #delta_y = npr.randint(-int(h * 0.35), int(h * 0.35)+1)
+        delta_x = npr.randint(-int(w * 0.20), int(w * 0.20)+1)
+        delta_y = npr.randint(-int(h * 0.20), int(h * 0.20)+1)
+				
         nx1 = int(max(x1 + w / 2 + delta_x - cur_size / 2, 0))
         ny1 = int(max(y1 + h / 2 + delta_y - cur_size / 2, 0))
         nx2 = nx1 + cur_size
@@ -136,7 +139,8 @@ def augment_for_one_image(annotation_line, size):
         landmark_x_dis = max_rot_landmark_x - min_rot_landmark_x
         landmark_y_dis = max_rot_landmark_y - min_rot_landmark_y
         tmp_dis = landmark_x_dis*landmark_x_dis + landmark_y_dis*landmark_y_dis
-        if tmp_dis < 0.64*cur_size*cur_size:
+        #if tmp_dis < 0.64*cur_size*cur_size:
+        if tmp_dis < 1.00*cur_size*cur_size:
             continue
 			
         offset_x = (rot_landmark_x - nx1+0.5)/float(cur_size)
