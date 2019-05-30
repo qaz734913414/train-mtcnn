@@ -9,7 +9,7 @@ from core.symbol import L106_Net112
 def train_L_net(image_set, root_path, dataset_path, prefix, ctx,
                 pretrained, epoch, begin_epoch, end_epoch, batch_size, thread_num, 
                 frequent, lr,lr_epoch, resume):
-    imdb = IMDB("mtcnn", image_set, root_path, dataset_path, 'train')
+    imdb = IMDB("mtcnn", image_set, root_path, dataset_path, 'train', 80)
     gt_imdb = imdb.get_annotations()
     sym = L106_Net112('train')
 
