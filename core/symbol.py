@@ -899,6 +899,91 @@ def P_Net20_s2v3(mode='train'):
         group = mx.symbol.Group([out])
     return group
 	
+def R_Net_p0(mode='train'):
+#def R_Net(mode='train'):
+    """
+    Refine Network
+    input shape 3 x 24 x 24
+    """
+    data = mx.symbol.Variable(name="data")
+    bbox_target = mx.symbol.Variable(name="bbox_target")
+    label = mx.symbol.Variable(name="label")
+
+    conv1 = mx.symbol.Convolution(data=data, kernel=(2, 2), num_filter=8, name="conv1") #24/23
+    bn1 = mx.sym.BatchNorm(data=conv1, name='bn1', fix_gamma=False,momentum=0.9)
+    relu1 = mx.symbol.LeakyReLU(data=bn1, act_type="prelu", name="relu1")
+    
+    conv2_dw = mx.symbol.Convolution(data=relu1, kernel=(3, 3), stride=(2, 2), num_filter=8, num_group=8, name="conv2_dw")#23/11
+    bn2_dw = mx.sym.BatchNorm(data=conv2_dw, name='bn2_dw', fix_gamma=False,momentum=0.9)
+    relu2_dw = mx.symbol.LeakyReLU(data=bn2_dw, act_type="prelu", name="relu2_dw")
+    conv2_sep = mx.symbol.Convolution(data=relu2_dw, kernel=(1, 1), num_filter=16, name="conv2_sep")
+    bn2_sep = mx.sym.BatchNorm(data=conv2_sep, name='bn2_sep', fix_gamma=False,momentum=0.9)
+    relu2 = mx.symbol.LeakyReLU(data=bn2_sep, act_type="prelu", name="relu2")
+    
+    conv3_dw = mx.symbol.Convolution(data=relu2, kernel=(3, 3), stride=(2, 2), num_filter=16, num_group=16, name="conv3_dw")#11/5
+    bn3_dw = mx.sym.BatchNorm(data=conv3_dw, name='bn3_dw', fix_gamma=False,momentum=0.9)
+    relu3_dw = mx.sym.Activation(data=bn3_dw, act_type="relu", name='relu3_dw')
+    conv3_sep = mx.symbol.Convolution(data=relu3_dw, kernel=(1, 1), num_filter=32, name="conv3_sep")
+    bn3_sep = mx.sym.BatchNorm(data=conv3_sep, name='bn3_sep', fix_gamma=False,momentum=0.9)
+    relu3 = mx.symbol.LeakyReLU(data=bn3_sep, act_type="prelu", name="relu3")
+    
+    conv4_dw = mx.symbol.Convolution(data=relu3, kernel=(3, 3), num_filter=32, num_group=32, name="conv4_dw")#5/3
+    bn4_dw = mx.sym.BatchNorm(data=conv4_dw, name='bn4_dw', fix_gamma=False,momentum=0.9)
+    relu4_dw = mx.symbol.LeakyReLU(data=bn4_dw, act_type="prelu", name="relu4_dw")
+    conv4_sep = mx.symbol.Convolution(data=relu4_dw, kernel=(1, 1), num_filter=64, name="conv4_sep")
+    bn4_sep = mx.sym.BatchNorm(data=conv4_sep, name='bn4_sep', fix_gamma=False,momentum=0.9)
+    relu4 = mx.symbol.LeakyReLU(data=bn4_sep, act_type="prelu", name="relu4")
+
+    conv5_dw = mx.symbol.Convolution(data=relu4, kernel=(3, 3), num_filter=64, num_group=64, name="conv5_dw")#3/1
+    bn5_dw = mx.sym.BatchNorm(data=conv5_dw, name='bn5_dw', fix_gamma=False,momentum=0.9)
+    relu5_dw = mx.symbol.LeakyReLU(data=bn5_dw, act_type="prelu", name="relu5_dw")
+	
+    fc1_dw = mx.symbol.Convolution(data=relu5_dw, kernel=(1, 1), num_filter=128, name="fc1_dw")#1/1
+    fc1_bn_dw = mx.sym.BatchNorm(data=fc1_dw, name='fc1_bn_dw', fix_gamma=False,momentum=0.9)
+    fc1_relu_dw = mx.symbol.LeakyReLU(data=fc1_bn_dw, act_type="prelu", name="fc1_relu_dw")
+	
+    fc2_dw = mx.symbol.Convolution(data=fc1_relu_dw, kernel=(1, 1), num_filter=128, name="fc2_dw")#1/1
+    fc2_bn_dw = mx.sym.BatchNorm(data=fc2_dw, name='fc2_bn_dw', fix_gamma=False,momentum=0.9)
+    fc2_relu_dw = mx.symbol.LeakyReLU(data=fc2_bn_dw, act_type="prelu", name="fc2_relu_dw")
+	
+    conv5_1 = mx.symbol.FullyConnected(data=fc2_relu_dw, num_hidden=2, name="conv5_1")
+    bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
+    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True, name="cls_prob")
+	
+    conv4_bb_dw = mx.symbol.Convolution(data=relu3, kernel=(3, 3), num_filter=32, num_group=32, name="conv4_bb_dw")#5/3
+    bn4_bb_dw = mx.sym.BatchNorm(data=conv4_bb_dw, name='bn4_bb_dw', fix_gamma=False,momentum=0.9)
+    relu4_bb_dw = mx.symbol.LeakyReLU(data=bn4_bb_dw, act_type="prelu", name="relu4_bb_dw")
+    conv4_bb_sep = mx.symbol.Convolution(data=relu4_bb_dw, kernel=(1, 1), num_filter=64, name="conv4_bb_sep")
+    bn4_bb_sep = mx.sym.BatchNorm(data=conv4_bb_sep, name='bn4_bb_sep', fix_gamma=False,momentum=0.9)
+    relu4_bb = mx.symbol.LeakyReLU(data=bn4_bb_sep, act_type="prelu", name="relu4_bb")
+
+    conv5_bb_dw = mx.symbol.Convolution(data=relu4_bb, kernel=(3, 3), num_filter=64, num_group=64, name="conv5_bb_dw")#3/1
+    bn5_bb_dw = mx.sym.BatchNorm(data=conv5_bb_dw, name='bn5_bb_dw', fix_gamma=False,momentum=0.9)
+    relu5_bb_dw = mx.symbol.LeakyReLU(data=bn5_bb_dw, act_type="prelu", name="relu5_bb_dw")
+	
+    fc1_bb_dw = mx.symbol.Convolution(data=relu5_bb_dw, kernel=(1, 1), num_filter=128, name="fc1_bb_dw")#1/1
+    fc1_bn_bb_dw = mx.sym.BatchNorm(data=fc1_bb_dw, name='fc1_bn_bb_dw', fix_gamma=False,momentum=0.9)
+    fc1_relu_bb_dw = mx.symbol.LeakyReLU(data=fc1_bn_bb_dw, act_type="prelu", name="fc1_relu_bb_dw")
+	
+    fc2_bb_dw = mx.symbol.Convolution(data=fc1_relu_bb_dw, kernel=(1, 1), num_filter=128, name="fc2_bb_dw")#1/1
+    fc2_bn_bb_dw = mx.sym.BatchNorm(data=fc2_bb_dw, name='fc2_bn_bb_dw', fix_gamma=False,momentum=0.9)
+    fc2_relu_bb_dw = mx.symbol.LeakyReLU(data=fc2_bn_bb_dw, act_type="prelu", name="fc2_relu_bb_dw")
+
+    conv5_2 = mx.symbol.FullyConnected(data=fc2_relu_bb_dw, num_hidden=4, name="conv5_2")
+    bn5_2 = mx.sym.BatchNorm(data=conv5_2, name='bn5_2', fix_gamma=False,momentum=0.9)
+    if mode == 'test':
+        bbox_pred = bn5_2
+        group = mx.symbol.Group([cls_prob, bbox_pred])
+    else:
+        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
+                                                     grad_scale=1, name="bbox_pred")
+
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+                                op_type='negativemining', name="negative_mining")
+
+        group = mx.symbol.Group([out])
+    return group
+
 def R_Net_p(mode='train'):
 #def R_Net(mode='train'):
     """
@@ -1089,6 +1174,97 @@ def R_Net_v2(mode='train'):
         out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
                                 op_type='negativemining', name="negative_mining")
 
+        group = mx.symbol.Group([out])
+    return group
+
+def O_Net_p0(mode="train", with_landmark = False):
+#def O_Net(mode="train", with_landmark = False):
+    """
+    Refine Network
+    input shape 3 x 48 x 48
+    """
+    data = mx.symbol.Variable(name="data")
+    bbox_target = mx.symbol.Variable(name="bbox_target")
+    label = mx.symbol.Variable(name="label")
+    
+    conv1 = mx.symbol.Convolution(data=data, kernel=(2, 2),num_filter=8, name="conv1") #48/47
+    bn1 = mx.sym.BatchNorm(data=conv1, name='bn1', fix_gamma=False,momentum=0.9)
+    relu1 = mx.symbol.LeakyReLU(data=bn1, act_type="prelu", name="relu1")
+    
+    conv2_dw = mx.symbol.Convolution(data=relu1, kernel=(3, 3), stride=(2, 2), num_filter=8, num_group=8, name="conv2_dw") #47/23
+    bn2_dw = mx.sym.BatchNorm(data=conv2_dw, name='bn2_dw', fix_gamma=False,momentum=0.9)
+    relu2_dw = mx.symbol.LeakyReLU(data=bn2_dw, act_type="prelu", name="relu2_dw")
+    conv2_sep = mx.symbol.Convolution(data=relu2_dw, kernel=(1, 1), num_filter=16, name="conv2_sep")
+    bn2_sep = mx.sym.BatchNorm(data=conv2_sep, name='bn2_sep', fix_gamma=False,momentum=0.9)
+    relu2 = mx.symbol.LeakyReLU(data=bn2_sep, act_type="prelu", name="relu2")
+
+    conv3_dw = mx.symbol.Convolution(data=relu2, kernel=(3, 3), stride=(2, 2), num_filter=16, num_group=16, name="conv3_dw") #23/11
+    bn3_dw = mx.sym.BatchNorm(data=conv3_dw, name='bn3_dw', fix_gamma=False,momentum=0.9)
+    relu3_dw = mx.symbol.LeakyReLU(data=bn3_dw, act_type="prelu", name="relu3_dw")
+    conv3_sep = mx.symbol.Convolution(data=relu3_dw, kernel=(1, 1), num_filter=32, name="conv3_sep")
+    bn3_sep = mx.sym.BatchNorm(data=conv3_sep, name='bn3_sep', fix_gamma=False,momentum=0.9)
+    relu3 = mx.symbol.LeakyReLU(data=bn3_sep, act_type="prelu", name="relu3")
+
+    conv4_dw = mx.symbol.Convolution(data=relu3, kernel=(3, 3), stride=(2, 2), num_filter=32, num_group=32, name="conv4_dw") #11/5
+    bn4_dw = mx.sym.BatchNorm(data=conv4_dw, name='bn4_dw', fix_gamma=False,momentum=0.9)
+    relu4_dw = mx.symbol.LeakyReLU(data=bn4_dw, act_type="prelu", name="relu4_dw")
+    conv4_sep = mx.symbol.Convolution(data=relu4_dw, kernel=(1, 1), num_filter=32, name="conv4_sep")
+    bn4_sep = mx.sym.BatchNorm(data=conv4_sep, name='bn4_sep', fix_gamma=False,momentum=0.9)
+    relu4 = mx.symbol.LeakyReLU(data=bn4_sep, act_type="prelu", name="relu4")
+	
+    conv5_dw = mx.symbol.Convolution(data=relu4, kernel=(3, 3), num_filter=32, num_group=32, name="conv5_dw") #5/3
+    bn5_dw = mx.sym.BatchNorm(data=conv5_dw, name='bn5_dw', fix_gamma=False,momentum=0.9)
+    relu5_dw = mx.symbol.LeakyReLU(data=bn5_dw, act_type="prelu", name="relu5_dw")
+    conv5_sep = mx.symbol.Convolution(data=relu5_dw, kernel=(1, 1), num_filter=64, name="conv5_sep")
+    bn5_sep = mx.sym.BatchNorm(data=conv5_sep, name='bn5_sep', fix_gamma=False,momentum=0.9)
+    relu5 = mx.symbol.LeakyReLU(data=bn5_sep, act_type="prelu", name="relu5")
+    
+    conv6_dw = mx.symbol.Convolution(data=relu5, kernel=(3, 3), num_filter=64, num_group=64, name="conv6_dw") #3/1
+    bn6_dw = mx.sym.BatchNorm(data=conv6_dw, name='bn6_dw', fix_gamma=False,momentum=0.9)
+    relu6_dw = mx.symbol.LeakyReLU(data=bn6_dw, act_type="prelu", name="relu6_dw")
+	
+    fc1 = mx.symbol.Convolution(data=relu6_dw, kernel=(1, 1), num_filter=128, name="fc1")#1/1
+    fc1_bn = mx.sym.BatchNorm(data=fc1, name='fc1_bn', fix_gamma=False,momentum=0.9)
+    fc1_relu = mx.symbol.LeakyReLU(data=fc1_bn, act_type="prelu", name="fc1_relu")
+	
+    fc2 = mx.symbol.Convolution(data=fc1_relu, kernel=(1, 1), num_filter=128, name="fc2")#1/1
+    fc2_bn = mx.sym.BatchNorm(data=fc2, name='fc2_bn', fix_gamma=False,momentum=0.9)
+    fc2_relu = mx.symbol.LeakyReLU(data=fc2_bn, act_type="prelu", name="fc2_relu")
+	
+    conv6_1 = mx.symbol.FullyConnected(data=fc2_relu, num_hidden=2, name="conv6_1")
+    bn6_1 = mx.sym.BatchNorm(data=conv6_1, name='bn6_1', fix_gamma=False,momentum=0.9)
+    cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
+	
+    conv5_bb_dw = mx.symbol.Convolution(data=relu4, kernel=(3, 3), num_filter=32, num_group=32, name="conv5_bb_dw") #5/3
+    bn5_bb_dw = mx.sym.BatchNorm(data=conv5_bb_dw, name='bn5_bb_dw', fix_gamma=False,momentum=0.9)
+    relu5_bb_dw = mx.symbol.LeakyReLU(data=bn5_bb_dw, act_type="prelu", name="relu5_bb_dw")
+    conv5_bb_sep = mx.symbol.Convolution(data=relu5_bb_dw, kernel=(1, 1), num_filter=64, name="conv5_bb_sep")
+    bn5_bb_sep = mx.sym.BatchNorm(data=conv5_bb_sep, name='bn5_bb_sep', fix_gamma=False,momentum=0.9)
+    relu5_bb = mx.symbol.LeakyReLU(data=bn5_bb_sep, act_type="prelu", name="relu5_bb")
+	
+    conv6_bb_dw = mx.symbol.Convolution(data=relu5_bb, kernel=(3, 3), num_filter=64, num_group=64, name="conv6_bb_dw") #3/1
+    bn6_bb_dw = mx.sym.BatchNorm(data=conv6_bb_dw, name='bn6_bb_dw', fix_gamma=False,momentum=0.9)
+    relu6_bb_dw = mx.symbol.LeakyReLU(data=bn6_bb_dw, act_type="prelu", name="relu6_bb_dw")
+	
+    fc1_bb = mx.symbol.Convolution(data=relu6_bb_dw, kernel=(1, 1), num_filter=128, name="fc1_bb")#1/1
+    fc1_bn_bb = mx.sym.BatchNorm(data=fc1_bb, name='fc1_bn_bb', fix_gamma=False,momentum=0.9)
+    fc1_relu_bb = mx.symbol.LeakyReLU(data=fc1_bn_bb, act_type="prelu", name="fc1_relu_bb")
+	
+    fc2_bb = mx.symbol.Convolution(data=fc1_relu_bb, kernel=(1, 1), num_filter=128, name="fc2_bb")#1/1
+    fc2_bn_bb = mx.sym.BatchNorm(data=fc2_bb, name='fc2_bn_bb', fix_gamma=False,momentum=0.9)
+    fc2_relu_bb = mx.symbol.LeakyReLU(data=fc2_bn_bb, act_type="prelu", name="fc2_relu_bb")
+	
+    conv6_2 = mx.symbol.FullyConnected(data=fc2_relu_bb, num_hidden=4, name="conv6_2")	
+    bn6_2 = mx.sym.BatchNorm(data=conv6_2, name='bn6_2', fix_gamma=False,momentum=0.9)
+    if mode == "test":
+        bbox_pred = bn6_2
+        group = mx.symbol.Group([cls_prob, bbox_pred])
+    else:
+        cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
+        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+                                                 grad_scale=1, name="bbox_pred")
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+                           op_type='negativemining', name="negative_mining")
         group = mx.symbol.Group([out])
     return group
 
