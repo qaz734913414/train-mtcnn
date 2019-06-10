@@ -34,7 +34,7 @@ def transform(im, train = False):
                 im[:,:,2] *= scale_2
                 im = np.clip(im,0.0,255.0)
 			
-        if config.enable_noise:
+        if config.enable_gaussian_noise:
             mean = 0
             var = np.random.randint(0,10)+1.0
             im = gaussian_noise(im,mean,var)
