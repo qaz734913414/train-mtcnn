@@ -2596,8 +2596,8 @@ def L106_Net112(mode="train"):
     
 	# conv6 = 1x1
     conv6 = Conv(conv5, num_filter=res_base_dim_big*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=512, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=512, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
+    fc1 = Conv(conv6, num_filter=res_base_dim_big*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
+    fc2 = Conv(fc1, num_filter=res_base_dim_big*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
     conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
     bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
     if mode == "test":
@@ -2642,8 +2642,8 @@ def L106_Net112_small(mode="train"):
     
 	# conv6 = 1x1
     conv6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=128, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=256, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
+    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
+    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
     conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
     bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
     if mode == "test":
@@ -2687,8 +2687,8 @@ def L106_Net112_v3(mode="train"):
     
 	# conv6 = 1x1
     conv6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=128, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=256, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
+    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
+    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
     conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
     bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
     if mode == "test":
