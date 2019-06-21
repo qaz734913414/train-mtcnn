@@ -4,6 +4,7 @@ import negativemining_landmark
 import negativemining_onlylandmark
 import negativemining_onlylandmark10
 import negativemining_onlylandmark106
+import negativemining_onlylandmark106_heatmap
 from config import config
 
 #def P_Net16_v0(mode='train'):
