@@ -2728,14 +2728,14 @@ def L106_Net112_v4(mode="train"):
     conv4 = Residual(conv34, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
     
 	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*8, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
+    conv45 = DResidual(conv4, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
+    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
     
     conv4_up = mx.symbol.UpSampling(conv4,scale=2, sample_type='nearest', name="conv4_up")
     conv5_up = mx.symbol.UpSampling(conv5,scale=4, sample_type='nearest', name="conv5_up")
     feat1 = mx.symbol.Concat(*[conv3,conv4_up,conv5_up],name="feat1")
-    feat1_sep = Conv(feat1, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
+    feat1_sep = Conv(feat1, num_filter=res_base_dim*6, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
+    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*6, num_group=res_base_dim*6, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
     feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
     feat3_dw = Conv(feat2_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat3_dw")
     feat3 = Conv(feat3_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat3")
