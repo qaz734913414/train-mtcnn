@@ -2834,7 +2834,7 @@ def L106_Net112_heatmap(mode="train"):
     conv2_sep = Conv(conv2_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv2_sep")
     # conv2_sep = 56X56
     
-    conv3_dw = Conv(conv2_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv3_dw")
+    conv3_dw = Conv(conv2_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv3_dw")
     conv3_sep = Conv(conv3_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv3_sep")
     # conv3_sep = 28X28
 	
@@ -2850,7 +2850,7 @@ def L106_Net112_heatmap(mode="train"):
     conv5_up = mx.symbol.UpSampling(conv5_sep, scale=4, sample_type='nearest', name="conv5_up")
     feat1 = mx.symbol.Concat(*[conv3_sep,conv4_up,conv5_up],name="feat1")
     feat1_sep = Conv(feat1, num_filter=res_base_dim*3, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*3, num_group=res_base_dim*3, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
+    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*3, num_group=res_base_dim*3, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="feat2_dw")
     feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
     heatmap = ConvOnly(feat2_sep, num_filter=106, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="heatmap")
     heatmap_bn = mx.sym.BatchNorm(data=heatmap, name='heammap_bn', fix_gamma=False,momentum=0.9)
