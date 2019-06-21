@@ -2838,11 +2838,11 @@ def L106_Net112_heatmap(mode="train"):
     conv3_sep = Conv(conv3_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv3_sep")
     # conv3_sep = 28X28
 	
-    conv4_dw = Conv(conv3_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv4_dw")
+    conv4_dw = Conv(conv3_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv4_dw")
     conv4_sep = Conv(conv4_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv4_sep")
     # conv4_sep = 14X14
     
-    conv5_dw = Conv(conv4_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv5_dw")
+    conv5_dw = Conv(conv4_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv5_dw")
     conv5_sep = Conv(conv5_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv5_sep")
     # conv5_sep = 7X7
 	
