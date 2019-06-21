@@ -2811,3 +2811,58 @@ def L106_Net112_v5(mode="train"):
         group = mx.symbol.Group([out])
         
     return group
+	
+
+heatmap_base_dim = 8
+#def L106_Net112_heatmap_v1(mode="train"):
+def L106_Net112_heatmap(mode="train"):
+    """
+    #Proposal Network
+    #input shape 3 x 112 x 112
+    """
+    data = mx.symbol.Variable(name="data")
+    landmark_target = mx.symbol.Variable(name="landmark_target")
+    
+    # data = 112X112
+    
+    conv1 = Conv(data, num_filter=heatmap_base_dim, kernel=(3, 3), pad=(1, 1), stride=(2, 2), name="conv1")
+    conv1_sep = Conv(conv1, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv1_sep")
+    # conv1_sep = 56X56
+	
+    conv2_dw = Conv(conv1_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv2_dw")
+    conv2_sep = Conv(conv2_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv2_sep")
+    # conv2_sep = 56X56
+    
+    conv3_dw = Conv(conv2_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv3_dw")
+    conv3_sep = Conv(conv3_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv3_sep")
+    # conv3_sep = 28X28
+	
+    conv4_dw = Conv(conv3_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv4_dw")
+    conv4_sep = Conv(conv4_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv4_sep")
+    # conv4_sep = 14X14
+    
+    conv5_dw = Conv(conv4_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv5_dw")
+    conv5_sep = Conv(conv5_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv5_sep")
+    # conv5_sep = 7X7
+	
+    conv4_up = mx.symbol.UpSampling(conv4_sep, scale=2, sample_type='nearest', name="conv4_up")
+    conv5_up = mx.symbol.UpSampling(conv5_sep, scale=4, sample_type='nearest', name="conv5_up")
+    feat1 = mx.symbol.Concat(*[conv3_sep,conv4_up,conv5_up],name="feat1")
+    feat1_sep = Conv(feat1, num_filter=res_base_dim*3, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
+    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*3, num_group=res_base_dim*3, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
+    feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
+    heatmap = ConvOnly(feat2_sep, num_filter=106, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="heatmap")
+    heatmap_bn = mx.sym.BatchNorm(data=heatmap, name='heammap_bn', fix_gamma=False,momentum=0.9)
+    heatmap_flat = mx.sym.Flatten(heatmap_bn)
+    if mode == "test":
+        landmark_pred = heatmap_flat
+        group = mx.symbol.Group([landmark_pred])
+    else:
+        
+        landmark_pred = mx.symbol.LinearRegressionOutput(data=heatmap_flat, label=landmark_target,
+                                                 grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+                            op_type='negativemining_onlylandmark106_heatmap', name="negative_mining")
+        group = mx.symbol.Group([out])
+        
+    return group
