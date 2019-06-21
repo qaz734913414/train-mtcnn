@@ -194,7 +194,7 @@ def landmark_to_heatmap28x28(landmark, sigma):
         hh1 = hh - cy
         dis2 = ww1**2+hh1**2
         
-        heatmap[d,:,:] = math.exp(-dis2/sigma2)
+        heatmap[d,:,:] = np.exp(-dis2/sigma2)
     return heatmap.flatten()
   
  
