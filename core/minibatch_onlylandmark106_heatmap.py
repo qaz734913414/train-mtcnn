@@ -9,6 +9,12 @@ sys.path.append(os.getcwd())
 from config import config
 import tools.image_processing as image_processing
 
+h = np.arange(0, 28, 1)
+w = np.arange(0, 28, 1)
+ww, hh = np.meshgrid(w, h)
+ww = np.tile(ww,[106,1,1])
+hh = np.tile(hh,[106,1,1])
+	
 class MyThread(threading.Thread):
     def __init__(self, func, args=()):
         super(MyThread, self).__init__()
@@ -37,6 +43,7 @@ def get_minibatch_thread(imdb, im_size):
     return processed_ims, landmark_reg_target
 
 def get_minibatch(imdb, im_size, thread_num = 4):
+
     num_images = len(imdb)
     thread_num = max(2,thread_num)
     num_per_thread = math.ceil(float(num_images)/thread_num)
@@ -184,11 +191,7 @@ def augment_for_one_image(annotation_line, size):
 def landmark_to_heatmap28x28(landmark, sigma):
     sigma2 = sigma*sigma
     heatmap = np.empty([106,28,28],dtype=np.float32)
-    h = np.arange(0, 28, 1)
-    w = np.arange(0, 28, 1)
-    ww, hh = np.meshgrid(w, h)
-    ww = np.tile(ww,[106,1,1])
-    hh = np.tile(hh,[106,1,1])
+    
     cx = landmark[0:212:2]*28-0.5
     cy = landmark[1:212:2]*28-0.5
     cx = cx[:,np.newaxis,np.newaxis]
