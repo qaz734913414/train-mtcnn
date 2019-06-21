@@ -183,15 +183,18 @@ def augment_for_one_image(annotation_line, size):
 	
 def landmark_to_heatmap28x28(landmark, sigma):
     sigma2 = sigma*sigma
-    pix_num = 28*28
-    heatmap = np.empty(106*pix_num,dtype=np.float32)
+    heatmap = np.empty([106,28,28],dtype=np.float32)
+    h = np.arange(0, 28, 1)
+    w = np.arange(0, 28, 1)
+    ww, hh = np.meshgrid(w, h)
     for d in range(106):
         cx = landmark[d*2+0]*28-0.5
         cy = landmark[d*2+1]*28-0.5
-        for h in range(28):
-            for w in range(28):
-                dis2 = (cx-w)*(cx-w)+(cy-h)*(cy-h)
-                heatmap[d*pix_num+h*28+w] = math.exp(-dis2/sigma2)
+        ww1 = ww - cx
+        hh1 = hh - cy
+        dis2 = ww1**2+hh1**2
+        
+        heatmap[d,:,:] = math.exp(-dis2/sigma2)
     return heatmap
   
  
