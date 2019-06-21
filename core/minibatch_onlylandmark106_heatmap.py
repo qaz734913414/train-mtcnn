@@ -187,14 +187,20 @@ def landmark_to_heatmap28x28(landmark, sigma):
     h = np.arange(0, 28, 1)
     w = np.arange(0, 28, 1)
     ww, hh = np.meshgrid(w, h)
-    for d in range(106):
-        cx = landmark[d*2+0]*28-0.5
-        cy = landmark[d*2+1]*28-0.5
-        ww1 = ww - cx
-        hh1 = hh - cy
-        dis2 = ww1**2+hh1**2
+    ww = np.tile(ww,[106,1,1])
+    hh = np.tile(hh,[106,1,1])
+    cx = landmark[0:212:2]*28-0.5
+    cy = landmark[1:212:2]*28-0.5
+    cx = cx[:,np.newaxis,np.newaxis]
+    cy = cy[:,np.newaxis,np.newaxis]
+    cx = np.tile(cx,[1,28,28])
+    cy = np.tile(cy,[1,28,28])
+    
+    ww1 = ww - cx
+    hh1 = hh - cy
+    dis2 = ww1**2+hh1**2
         
-        heatmap[d,:,:] = np.exp(-dis2/sigma2)
+    heatmap = np.exp(-dis2/sigma2)
     return heatmap.flatten()
   
  
