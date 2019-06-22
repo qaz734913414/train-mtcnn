@@ -2728,8 +2728,8 @@ def L106_Net112_v4(mode="train"):
     conv4 = Residual(conv34, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
     
 	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
+    conv45 = DResidual(conv4, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv45")
+    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res5")
     
     conv4_up = mx.symbol.UpSampling(conv4,scale=2, sample_type='nearest', name="conv4_up")
     conv5_up = mx.symbol.UpSampling(conv5,scale=4, sample_type='nearest', name="conv5_up")
