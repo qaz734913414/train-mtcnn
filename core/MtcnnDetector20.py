@@ -375,7 +375,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
         return boxes, boxes_c
 
-    def detect_onet(self, im, det, mode = 'test'):
+    def detect_onet(self, im, dets, mode = 'test'):
         """Get face candidates using onet
 
         Parameters:
