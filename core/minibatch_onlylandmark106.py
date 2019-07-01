@@ -165,27 +165,21 @@ def augment_for_one_image(annotation_line, size):
         offset_x = (landmark_x - nx1+0.5)/float(cur_size)
         offset_y = (landmark_y - ny1+0.5)/float(cur_size)
     
-    if config.landmark106_select23:
-        select_landmark=[0 for i in range(46)]
-        select_landmark[0:16:2] = offset_x[66:74]
-        select_landmark[1:17:2] = offset_y[66:74]
-        select_landmark[16] = offset_x[104]
-        select_landmark[17] = offset_y[104]
-        select_landmark[18:34:2] = offset_x[75:83]
-        select_landmark[19:35:2] = offset_y[75:83]
-        select_landmark[34] = offset_x[105]
-        select_landmark[35] = offset_y[105]
-        select_landmark[36] = offset_x[60]
-        select_landmark[37] = offset_y[60]
-        select_landmark[38] = offset_x[84]
-        select_landmark[39] = offset_y[84]
-        select_landmark[40] = offset_x[96]
-        select_landmark[41] = offset_y[96]
-        select_landmark[42] = offset_x[90]
-        select_landmark[43] = offset_y[90]
-        select_landmark[44] = offset_x[100]
-        select_landmark[45] = offset_y[100]
-        landmark = select_landmark
+    if config.landmark106_migu_weighting:
+        landmark[0:66:2] = offset_x[0:33]
+        landmark[1:67:2] = offset_y[0:33]
+        landmark[66:86:2] = offset_x[33:43]*2 #eyebrow up
+        landmark[67:87:2] = offset_y[33:43]*2 #eyebrow up
+        landmark[86:128:2] = offset_x[43:64]
+        landmark[87:129:2] = offset_y[43:64]
+        landmark[128:144:2] = offset_x[64:72]*2 #eyebrow down
+        landmark[129:145:2] = offset_y[64:72]*2 #eyebrow down
+        landmark[144:168:2] = offset_x[72:84]
+        landmark[145:169:2] = offset_y[72:84]
+        landmark[168:208:2] = offset_x[84:104]*2 #lips
+        landmark[169:209:2] = offset_y[84:104]*2 #lips
+        landmark[208:212:2] = offset_x[104:106]
+        landmark[209:213:2] = offset_y[104:106]
     else:
         landmark[0::2] = offset_x
         landmark[1::2] = offset_y
