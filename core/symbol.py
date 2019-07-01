@@ -2660,106 +2660,7 @@ def L106_Net112_small(mode="train"):
         
     return group
 	
-def L106_Net112_v3(mode="train"):
-#def L106_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    # conv1 = 56X56
-    conv1 = Conv(data, num_filter=res_base_dim, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv1")
-    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim, name="res2")
-    
-	#conv23 = 28X28
-    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(5, 5), stride=(2, 2), pad=(2, 2), num_group=res_base_dim*2, name="dconv23")
-    conv3 = Residual(conv23, num_block=2, num_out=res_base_dim*2, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*2, name="res3")
-    
-	#conv34 = 14X14
-    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(5, 5), stride=(2, 2), pad=(2, 2), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=3, num_out=res_base_dim*4, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*4, name="res4")
-    
-	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(5, 5), stride=(2, 2), pad=(2, 2), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=2, num_out=res_base_dim*8, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*8, name="res5")
-    
-	# conv6 = 1x1
-    conv6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
-    else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
-	
-def L106_Net112_v4(mode="train"):
-#def L106_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    # conv1 = 56X56
-    conv1 = Conv(data, num_filter=res_base_dim, kernel=(3, 3), pad=(1, 1), stride=(2, 2), name="conv1")
-    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim, name="res2")
-    
-	#conv23 = 28X28
-    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*2, name="dconv23")
-    conv3 = Residual(conv23, num_block=1, num_out=res_base_dim*2, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*2, name="res3")
-    
-	#conv34 = 14X14
-    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
-    
-	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv45")
-    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res5")
-    
-    conv4_up = mx.symbol.UpSampling(conv4,scale=2, sample_type='nearest', name="conv4_up")
-    conv5_up = mx.symbol.UpSampling(conv5,scale=4, sample_type='nearest', name="conv5_up")
-    feat1 = mx.symbol.Concat(*[conv3,conv4_up,conv5_up],name="feat1")
-    feat1_sep = Conv(feat1, num_filter=res_base_dim*6, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*6, num_group=res_base_dim*6, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
-    feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
-    feat3_dw = Conv(feat2_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat3_dw")
-    feat3 = Conv(feat3_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat3")
-    
-    # conv6 = 1x1
-    conv6 = Conv(feat3, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
-    else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
-	
-def L106_Net112_v5(mode="train"):
+def L106_Net112_small_split(mode="train"):
 #def L106_Net112(mode="train"):
     """
     #Proposal Network
@@ -2785,21 +2686,50 @@ def L106_Net112_v5(mode="train"):
     conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
     conv5 = Residual(conv45, num_block=2, num_out=res_base_dim*8, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
     
-    conv4_up = mx.symbol.UpSampling(conv4,scale=2, sample_type='nearest', name="conv4_up")
-    conv5_up = mx.symbol.UpSampling(conv5,scale=4, sample_type='nearest', name="conv5_up")
-    feat1 = mx.symbol.Concat(*[conv3,conv4_up,conv5_up],name="feat1")
-    feat1_sep = Conv(feat1, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat2_dw")
-    feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
-    feat3_dw = Conv(feat2_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="feat3_dw")
-    feat3 = Conv(feat3_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat3")
-    
-    # conv6 = 1x1
-    conv6 = Conv(feat3, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
+	# conv6 = 1x1
+    conv6_p1 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p1")
+    fc1_p1 = Conv(conv6_p1, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p1")
+    fc2_p1 = Conv(fc1_p1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p1")	
+    conv6_3_p1 = mx.symbol.FullyConnected(data=fc2_p1, num_hidden=66, name="conv6_3_p1")	
+    bn6_3_p1 = mx.sym.BatchNorm(data=conv6_3_p1, name='bn6_3_p1', fix_gamma=False,momentum=0.9)
+	
+    conv6_p2 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p2")
+    fc1_p2 = Conv(conv6_p2, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p2")
+    fc2_p2 = Conv(fc1_p2, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p2")	
+    conv6_3_p2 = mx.symbol.FullyConnected(data=fc2_p2, num_hidden=20, name="conv6_3_p2")	
+    bn6_3_p2 = mx.sym.BatchNorm(data=conv6_3_p2, name='bn6_3_p2', fix_gamma=False,momentum=0.9)
+	
+    conv6_p3 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p3")
+    fc1_p3 = Conv(conv6_p3, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p3")
+    fc2_p3 = Conv(fc1_p3, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p3")	
+    conv6_3_p3 = mx.symbol.FullyConnected(data=fc2_p3, num_hidden=42, name="conv6_3_p3")	
+    bn6_3_p3 = mx.sym.BatchNorm(data=conv6_3_p3, name='bn6_3_p3', fix_gamma=False,momentum=0.9)
+	
+    conv6_p4 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p4")
+    fc1_p4 = Conv(conv6_p4, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p4")
+    fc2_p4 = Conv(fc1_p4, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p4")	
+    conv6_3_p4 = mx.symbol.FullyConnected(data=fc2_p4, num_hidden=16, name="conv6_3_p4")	
+    bn6_3_p4 = mx.sym.BatchNorm(data=conv6_3_p4, name='bn6_3_p4', fix_gamma=False,momentum=0.9)
+	
+    conv6_p5 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p5")
+    fc1_p5 = Conv(conv6_p5, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p5")
+    fc2_p5 = Conv(fc1_p5, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p5")	
+    conv6_3_p5 = mx.symbol.FullyConnected(data=fc2_p5, num_hidden=24, name="conv6_3_p5")	
+    bn6_3_p5 = mx.sym.BatchNorm(data=conv6_3_p5, name='bn6_3_p5', fix_gamma=False,momentum=0.9)
+	
+    conv6_p6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p6")
+    fc1_p6 = Conv(conv6_p6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p6")
+    fc2_p6 = Conv(fc1_p6, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p6")	
+    conv6_3_p6 = mx.symbol.FullyConnected(data=fc2_p6, num_hidden=40, name="conv6_3_p6")	
+    bn6_3_p6 = mx.sym.BatchNorm(data=conv6_3_p6, name='bn6_3_p6', fix_gamma=False,momentum=0.9)
+	
+    conv6_p7 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p7")
+    fc1_p7 = Conv(conv6_p7, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p7")
+    fc2_p7 = Conv(fc1_p7, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p7")	
+    conv6_3_p7 = mx.symbol.FullyConnected(data=fc2_p7, num_hidden=4, name="conv6_3_p7")	
+    bn6_3_p7 = mx.sym.BatchNorm(data=conv6_3_p7, name='bn6_3_p7', fix_gamma=False,momentum=0.9)
+	
+    bn6_3 = mx.sym.Concat(*[bn6_3_p1,bn6_3_p2,bn6_3_p3,bn6_3_p4,bn6_3_p5,bn6_3_p6,bn6_3_p7])
     if mode == "test":
         landmark_pred = bn6_3
         group = mx.symbol.Group([landmark_pred])
@@ -2813,60 +2743,7 @@ def L106_Net112_v5(mode="train"):
         
     return group
 	
-def L106_Net112_v6(mode="train"):
-#def L106_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    # conv1 = 56X56
-    conv1 = Conv(data, num_filter=res_base_dim, kernel=(7, 7), pad=(3, 3), stride=(2, 2), name="conv1")
-    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(7, 7), stride=(1, 1), pad=(3, 3), num_group=res_base_dim, name="res2")
-    
-	#conv23 = 28X28
-    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(7, 7), stride=(2, 2), pad=(3, 3), num_group=res_base_dim*2, name="dconv23")
-    conv3 = Residual(conv23, num_block=2, num_out=res_base_dim*2, kernel=(7, 7), stride=(1, 1), pad=(3, 3), num_group=res_base_dim*2, name="res3")
-    
-	#conv34 = 14X14
-    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(7, 7), stride=(2, 2), pad=(3, 3), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=3, num_out=res_base_dim*4, kernel=(7, 7), stride=(1, 1), pad=(3, 3), num_group=res_base_dim*4, name="res4")
-    
-	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(7, 7), stride=(2, 2), pad=(3, 3), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=2, num_out=res_base_dim*8, kernel=(7, 7), stride=(1, 1), pad=(3, 3), num_group=res_base_dim*8, name="res5")
-    
-    conv4_up = mx.symbol.UpSampling(conv4,scale=2, sample_type='nearest', name="conv4_up")
-    conv5_up = mx.symbol.UpSampling(conv5,scale=4, sample_type='nearest', name="conv5_up")
-    feat1 = mx.symbol.Concat(*[conv3,conv4_up,conv5_up],name="feat1")
-    feat1_sep = Conv(feat1, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(7, 7), pad=(3, 3), stride=(2, 2), name="feat2_dw")
-    feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
-    feat3_dw = Conv(feat2_sep, num_filter=res_base_dim*8, num_group=res_base_dim*8, kernel=(7, 7), pad=(3, 3), stride=(2, 2), name="feat3_dw")
-    feat3 = Conv(feat3_dw, num_filter=res_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat3")
-    
-    # conv6 = 1x1
-    conv6 = Conv(feat3, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
-    else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
-	
+
 def hourglass_block(data, data_dim, suffix=''):
     conv1 = Residual(data, num_block=1, num_out= data_dim, num_group=data_dim, kernel=(5,5), pad=(2,2), stride=(1,1), name="res1", suffix=suffix)
     # conv1 = 28x28
