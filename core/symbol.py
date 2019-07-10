@@ -3,6 +3,7 @@ import negativemining
 import negativemining_landmark
 import negativemining_onlylandmark
 import negativemining_onlylandmark10
+import negativemining_onlylandmark17
 import negativemining_onlylandmark106
 import negativemining_onlylandmark106_heatmap
 from config import config
@@ -2739,6 +2740,55 @@ def L106_Net112_small_split(mode="train"):
                                                  grad_scale=1, name="landmark_pred")
         out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
+        group = mx.symbol.Group([out])
+        
+    return group
+	
+	
+res17_base_dim = 32
+#def L17_Net112_small(mode="train"):
+def L17_Net112(mode="train"):
+    """
+    #Proposal Network
+    #input shape 3 x 112 x 112
+    """
+    data = mx.symbol.Variable(name="data")
+    landmark_target = mx.symbol.Variable(name="landmark_target")
+    
+    # data = 112X112
+    conv1 = Conv(data, num_filter=res17_base_dim, kernel=(11, 11), pad=(5, 5), dilate=(1,1), stride=(2, 2), name="conv1")
+    # conv1 = 56X56
+	
+    conv2 = Conv(conv1, num_filter=res17_base_dim*2, kernel=(7, 7), pad=(3, 3), dilate=(1,1), stride=(2, 2), name="conv2")
+    # conv2 = 28X28
+    conv3 = Conv(conv2, num_filter=res17_base_dim*4, kernel=(5, 5), pad=(2, 2), dilate=(1,1), stride=(2, 2), name="conv3")
+    # conv3 = 14X14
+	
+    conv4 = Conv(conv3, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv4")
+    # conv4 = 14X14
+	
+    conv5 = Conv(conv4, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv5")
+    # conv5 = 14X14
+	
+    conv6 = Conv(conv5, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv6")
+    # conv6 = 14X14
+	
+	
+    conv7 = Conv(conv6, num_filter=res17_base_dim*8, kernel=(14, 14), pad=(0, 0), stride=(1, 1), name="conv7")
+    # conv7 = 1x1
+    fc1 = Conv(conv7, num_filter=res17_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
+    fc2 = Conv(fc1, num_filter=res17_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
+    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=34, name="conv6_3")	
+    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
+    if mode == "test":
+        landmark_pred = bn6_3
+        group = mx.symbol.Group([landmark_pred])
+    else:
+        
+        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+                                                 grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+                            op_type='negativemining_onlylandmark17', name="negative_mining")
         group = mx.symbol.Group([out])
         
     return group
