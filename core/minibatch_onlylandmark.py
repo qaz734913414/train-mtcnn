@@ -38,7 +38,7 @@ def get_minibatch_thread(imdb, im_size):
 
 def get_minibatch(imdb, im_size, thread_num = 4):
     num_images = len(imdb)
-    thread_num = max(2,thread_num)
+    thread_num = max(1,thread_num)
     num_per_thread = math.ceil(float(num_images)/thread_num)
     #print(num_per_thread)
     threads = []

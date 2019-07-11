@@ -59,7 +59,7 @@ def get_minibatch(imdb, num_classes, im_size, with_type, with_cls, with_bbox, wi
     # im_size: 16/20, 24 or 48
     #flag = np.random.randint(3,size=1)
     num_images = len(imdb)
-    thread_num = max(2,thread_num)
+    thread_num = max(1,thread_num)
     num_per_thread = math.ceil(float(num_images)/thread_num)
     #print(num_per_thread)
     threads = []
