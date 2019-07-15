@@ -12,8 +12,8 @@ import tools.image_processing as image_processing
 h = np.arange(0, config.HeatMapSize, 1)
 w = np.arange(0, config.HeatMapSize, 1)
 ww, hh = np.meshgrid(w, h)
-ww = np.tile(ww,[15,1,1])
-hh = np.tile(hh,[15,1,1])
+ww = np.tile(ww,[14,1,1])
+hh = np.tile(hh,[14,1,1])
 	
 class MyThread(threading.Thread):
     def __init__(self, func, args=()):
@@ -153,8 +153,8 @@ def landmark_to_heatmap(landmark_x, landmark_y, vis, sigma):
     cy = landmark_y*config.HeatMapSize-0.5
     cx = cx[:,np.newaxis,np.newaxis]
     cy = cy[:,np.newaxis,np.newaxis]
-    cx = np.tile(cx,[14,config.HeatMapSize,config.HeatMapSize])
-    cy = np.tile(cy,[14,config.HeatMapSize,config.HeatMapSize])
+    cx = np.tile(cx,[1,config.HeatMapSize,config.HeatMapSize])
+    cy = np.tile(cy,[1,config.HeatMapSize,config.HeatMapSize])
     vv = vis[:,np.newaxis,np.newaxis]
     vv = np.tile(vv,[14,config.HeatMapSize,config.HeatMapSize])
     
