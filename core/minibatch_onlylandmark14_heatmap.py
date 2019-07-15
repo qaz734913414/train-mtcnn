@@ -93,7 +93,7 @@ def augment_for_one_image(annotation_line, size):
     cy = 0.5*(y1+y2)
 
     cur_angle = npr.randint(int(config.min_rot_angle),int(config.max_rot_angle)+1)
-    rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark106(cx,cy,landmark_x,landmark_y, cur_angle,1)
+    rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark14(cx,cy,landmark_x,landmark_y, cur_angle,1)
     cur_size_w = int(npr.randint(10, 16)*0.1*bbox_size_w)
     cur_size_h = int(npr.randint(10, 16)*0.1*bbox_size_h)
     
@@ -120,7 +120,7 @@ def augment_for_one_image(annotation_line, size):
     pad_x_left = int(pad_x*0.5)
     pad_y_up = int(pad_y*0.5)
         
-    rot_img,_,_ = image_processing.rotateWithLandmark106(img,cx,cy,landmark_x,landmark_y, cur_angle,1)   
+    rot_img,_,_ = image_processing.rotateWithLandmark14(img,cx,cy,landmark_x,landmark_y, cur_angle,1)   
     cropped_im[pad_y_up:(pad_y_up+cur_size_h), pad_x_left:(pad_x_left+cur_size_w), :] = rot_img[ny1 : ny2, nx1 : nx2, :]
     resized_im = cv2.resize(cropped_im, (size, size), interpolation=cv2.INTER_LINEAR)
 	
