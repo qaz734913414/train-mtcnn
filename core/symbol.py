@@ -2765,19 +2765,19 @@ def L14_Net112_heatmap(mode="train"):
 	
     if config.HeatMapStage == 1:
         heatmap = stg1_feat
-    else if config.HeatMapStage == 2:
+    elif config.HeatMapStage == 2:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat],name='feat_concat')
-    else if config.HeatMapStage == 3:
+    elif config.HeatMapStage == 3:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat],name='feat_concat')
-    else if config.HeatMapStage == 4:
+    elif config.HeatMapStage == 4:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat],name='feat_concat')
-    else if config.HeatMapStage == 5:
+    elif config.HeatMapStage == 5:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat],name='feat_concat')
-    else if config.HeatMapStage == 6:
+    elif config.HeatMapStage == 6:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat],name='feat_concat')
-    else if config.HeatMapStage == 7:
+    elif config.HeatMapStage == 7:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat,stg7_feat],name='feat_concat')
-    else if config.HeatMapStage == 8:
+    elif config.HeatMapStage == 8:
         heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat,stg7_feat,stg8_feat],name='feat_concat')
     
     heatmap_flat = mx.sym.Flatten(heatmap)
