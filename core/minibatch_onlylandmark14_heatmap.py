@@ -156,7 +156,7 @@ def landmark_to_heatmap(landmark_x, landmark_y, vis, sigma):
     cx = np.tile(cx,[1,config.HeatMapSize,config.HeatMapSize])
     cy = np.tile(cy,[1,config.HeatMapSize,config.HeatMapSize])
     vv = vis[:,np.newaxis,np.newaxis]
-    vv = np.tile(vv,[14,config.HeatMapSize,config.HeatMapSize])
+    vv = np.tile(vv,[1,config.HeatMapSize,config.HeatMapSize])
     
     ww1 = ww - cx
     hh1 = hh - cy
