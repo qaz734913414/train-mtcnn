@@ -163,7 +163,7 @@ def landmark_to_heatmap(landmark_x, landmark_y, vis, sigma):
     dis2 = ww1**2+hh1**2
         
     heatmap[0:14,:,:] = np.exp(-dis2/sigma2)*vv
-    heatmap[14,:,:] = 1 - np.max(heatmap[0:14,:,:],axis=2)  
+    heatmap[14,:,:] = 1 - np.max(heatmap[0:14,:,:],axis=0)  
     for i in range(config.HeatMapStage-1):
         heatmap[15*(i+1):15*(i+2),:,:] = heatmap[0:15,:,:]	
     return heatmap.flatten()
