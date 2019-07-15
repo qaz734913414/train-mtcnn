@@ -94,8 +94,8 @@ def augment_for_one_image(annotation_line, size):
 
     cur_angle = npr.randint(int(config.min_rot_angle),int(config.max_rot_angle)+1)
     rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark14(cx,cy,landmark_x,landmark_y, cur_angle,1)
-    cur_size_w = int(npr.randint(10, 16)*0.1*bbox_size_w)
-    cur_size_h = int(npr.randint(10, 16)*0.1*bbox_size_h)
+    cur_size_w = int(npr.randint(10, 16)*0.1*w)
+    cur_size_h = int(npr.randint(10, 16)*0.1*h)
     
     # delta here is the offset of box center
     delta_x = npr.randint(-int(cur_size_w * 0.20), int(cur_size_w * 0.20)+1)
