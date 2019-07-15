@@ -2732,7 +2732,7 @@ def HeatMapStage(data, out_channel, stage_id, in_feat = None):
     conv8_sep = Conv(conv8_dw, num_filter=heatmap_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv8_sep"%id)
     # conv8_sep = 28X28
 	
-    feat = ConvOnly(feat2_sep, num_filter=out_channel, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_feat"%id)
+    feat = ConvOnly(conv8_sep, num_filter=out_channel, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_feat"%id)
     feat_bn = mx.sym.BatchNorm(data=feat, name='stg%d_feat_bn'%id, fix_gamma=False,momentum=0.9)
 	
     return feat_bn
