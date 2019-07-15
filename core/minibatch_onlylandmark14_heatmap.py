@@ -101,8 +101,8 @@ def augment_for_one_image(annotation_line, size):
     delta_x = npr.randint(-int(cur_size_w * 0.20), int(cur_size_w * 0.20)+1)
     delta_y = npr.randint(-int(cur_size_h * 0.20), int(cur_size_h * 0.20)+1)
 				
-    nx1 = int(max(x1 + cur_size_w / 2 + delta_x - cur_size_w / 2, 0))
-    ny1 = int(max(y1 + cur_size_h / 2 + delta_y - cur_size_h / 2, 0))
+    nx1 = int(max(cx + delta_x - cur_size_w / 2, 0))
+    ny1 = int(max(cy + delta_y - cur_size_h / 2, 0))
     nx2 = nx1 + cur_size_w
     ny2 = ny1 + cur_size_h
     nx1 = max(0,nx1)
@@ -126,7 +126,7 @@ def augment_for_one_image(annotation_line, size):
 	
     for i in range(vis.shape[0]):
         if vis[i] == 1:
-            if rot_landmark_x[i] < nx1 or rot_landmark_x[i] > nx1 or rot_landmark_y[i] < ny1 or rot_landmark_y[i] > ny2:
+            if rot_landmark_x[i] < nx1 or rot_landmark_x[i] > nx2 or rot_landmark_y[i] < ny1 or rot_landmark_y[i] > ny2:
                 vis[i] = 0
     
     offset_x = (rot_landmark_x - nx1 + pad_x_left +0.5)/float(cur_size)
