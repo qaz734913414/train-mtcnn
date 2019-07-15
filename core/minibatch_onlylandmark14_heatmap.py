@@ -98,8 +98,8 @@ def augment_for_one_image(annotation_line, size):
     cur_size_h = int(npr.randint(10, 16)*0.1*h)
     
     # delta here is the offset of box center
-    delta_x = npr.randint(-int(cur_size_w * 0.20), int(cur_size_w * 0.20)+1)
-    delta_y = npr.randint(-int(cur_size_h * 0.20), int(cur_size_h * 0.20)+1)
+    delta_x = npr.randint(-int(cur_size_w * 0.05), int(cur_size_w * 0.05)+1)
+    delta_y = npr.randint(-int(cur_size_h * 0.05), int(cur_size_h * 0.05)+1)
 				
     nx1 = int(max(cx + delta_x - cur_size_w / 2, 0))
     ny1 = int(max(cy + delta_y - cur_size_h / 2, 0))
