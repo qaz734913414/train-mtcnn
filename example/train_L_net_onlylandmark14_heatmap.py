@@ -2,19 +2,20 @@ import argparse
 import mxnet as mx
 import sys,os
 sys.path.append(os.getcwd())
-from core.imdb_onlylandmark106_heatmap import IMDB
-from train_onlylandmark106_heatmap import train_net
-from core.symbol import L106_Net112_heatmap
+from core.imdb_onlylandmark14_heatmap import IMDB
+from train_onlylandmark14_heatmap import train_net
+from core.symbol import L14_Net112_heatmap
+from config import config
 
 def train_L_net(image_set, root_path, dataset_path, prefix, ctx,
                 pretrained, epoch, begin_epoch, end_epoch, batch_size, thread_num, 
                 frequent, lr,lr_epoch, resume):
     imdb = IMDB("mtcnn", image_set, root_path, dataset_path, 'train', 80)
     gt_imdb = imdb.get_annotations()
-    sym = L106_Net112_heatmap('train')
+    sym = L14_Net112_heatmap('train')
 
     train_net(sym, prefix, ctx, pretrained, epoch, begin_epoch, end_epoch, gt_imdb, batch_size, thread_num,
-              112, False, False, True, frequent, not resume, lr, lr_epoch)
+              config.HeatMapSize*4, False, False, True, frequent, not resume, lr, lr_epoch)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train L106_Net112',
@@ -26,11 +27,11 @@ def parse_args():
     parser.add_argument('--dataset_path', dest='dataset_path', help='dataset folder',
                         default='data/mtcnn', type=str)
     parser.add_argument('--prefix', dest='prefix', help='new model prefix',
-                        default='model/lnet106_112', type=str)
+                        default='model/lnet14_heatmap', type=str)
     parser.add_argument('--gpus', dest='gpu_ids', help='GPU device to train with',
                         default='0', type=str)
     parser.add_argument('--pretrained', dest='pretrained', help='pretrained prefix',
-                        default='model/lnet106_112', type=str)
+                        default='model/lnet14_heatmap', type=str)
     parser.add_argument('--epoch', dest='epoch', help='load epoch',
                         default=0, type=int)
     parser.add_argument('--begin_epoch', dest='begin_epoch', help='begin epoch of training',

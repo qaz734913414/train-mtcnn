@@ -2,15 +2,15 @@ import mxnet as mx
 import numpy as np
 from config import config
 
-class NegativeMiningOperator_OnlyLandmark106_heatmap(mx.operator.CustomOp):
+class NegativeMiningOperator_OnlyLandmark14_heatmap(mx.operator.CustomOp):
     def __init__(self, landmark_ohem=config.LANDMARK_OHEM, landmark_ohem_ratio=config.LANDMARK_OHEM_RATIO):
-        super(NegativeMiningOperator_OnlyLandmark106_heatmap, self).__init__()
+        super(NegativeMiningOperator_OnlyLandmark14_heatmap, self).__init__()
         self.landmark_ohem = landmark_ohem
         self.landmark_ohem_ratio = landmark_ohem_ratio
 
     def forward(self, is_train, req, in_data, out_data, aux):
-        landmark_pred = in_data[0].asnumpy() # batchsize x (106x28x28=83104)
-        landmark_target = in_data[1].asnumpy() # batchsize x (106x28x28=83104)
+        landmark_pred = in_data[0].asnumpy() # batchsize x (15x28x28=11760)
+        landmark_target = in_data[1].asnumpy() # batchsize x (15x28x28=11760)
         
         # landmark
         self.assign(out_data[0], req[0], in_data[0])
@@ -30,17 +30,17 @@ class NegativeMiningOperator_OnlyLandmark106_heatmap(mx.operator.CustomOp):
     def backward(self, req, out_grad, in_data, out_data, in_grad, aux):
         landmark_keep = out_data[1].asnumpy().reshape(-1, 1)
 
-        landmark_grad = np.repeat(landmark_keep, 83104, axis=1)
+        landmark_grad = np.repeat(landmark_keep, config.HeatMapStage*15*config.HeatMapSize*config.HeatMapSize, axis=1)
 
         landmark_grad /= len(np.where(landmark_keep == 1)[0])
 
         self.assign(in_grad[0], req[0], mx.nd.array(landmark_grad))
 
 
-@mx.operator.register("negativemining_onlylandmark106_heatmap")
-class NegativeMiningProp_OnlyLandmark106_heatmap(mx.operator.CustomOpProp):
+@mx.operator.register("negativemining_onlylandmark14_heatmap")
+class NegativeMiningProp_OnlyLandmark14_heatmap(mx.operator.CustomOpProp):
     def __init__(self):
-        super(NegativeMiningProp_OnlyLandmark106_heatmap, self).__init__(need_top_grad=False)
+        super(NegativeMiningProp_OnlyLandmark14_heatmap, self).__init__(need_top_grad=False)
 
     def list_arguments(self):
         return ['landmark_pred', 'landmark_target']
@@ -54,4 +54,4 @@ class NegativeMiningProp_OnlyLandmark106_heatmap(mx.operator.CustomOpProp):
         return in_shape, [in_shape[0], keep_shape]
 
     def create_operator(self, ctx, shapes, dtypes):
-        return NegativeMiningOperator_OnlyLandmark106_heatmap()
+        return NegativeMiningOperator_OnlyLandmark14_heatmap()

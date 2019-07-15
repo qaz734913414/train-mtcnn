@@ -2,8 +2,8 @@ import logging
 import mxnet as mx
 import core.metric_onlylandmark as metric_onlylandmark
 from mxnet.module.module import Module
-from core.loader_onlylandmark17 import ImageLoader
-from core.imdb_onlylandmark17 import IMDB
+from core.loader_onlylandmark14_heatmap import ImageLoader
+from core.imdb_onlylandmark14_heatmap import IMDB
 from tools.load_model import load_param
 from config import config
 

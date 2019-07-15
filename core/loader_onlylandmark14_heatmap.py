@@ -1,6 +1,6 @@
 import mxnet as mx
 import numpy as np
-import minibatch_onlylandmark106_heatmap as minibatch
+import minibatch_onlylandmark14_heatmap as minibatch
 
 class ImageLoader(mx.io.DataIter):
     def __init__(self, imdb, im_size, batch_size, thread_num, flip=True, shuffle=False, ctx=None, work_load_list=None):

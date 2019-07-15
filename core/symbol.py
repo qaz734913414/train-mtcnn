@@ -6,6 +6,7 @@ import negativemining_onlylandmark10
 import negativemining_onlylandmark17
 import negativemining_onlylandmark106
 import negativemining_onlylandmark106_heatmap
+import negativemining_onlylandmark14_heatmap
 from config import config
 
 #def P_Net16_v0(mode='train'):
@@ -2539,8 +2540,8 @@ def Act(data, act_type, name):
     #body = mx.sym.Activation(data=data, act_type='relu', name=name)
     return body
 
-def Conv(data, num_filter=1, kernel=(1, 1), stride=(1, 1), pad=(0, 0), num_group=1, name=None, suffix=''):
-    conv = mx.sym.Convolution(data=data, num_filter=num_filter, kernel=kernel, num_group=num_group, stride=stride, pad=pad, no_bias=True, name='%s%s_conv2d' %(name, suffix))
+def Conv(data, num_filter=1, kernel=(1, 1), stride=(1, 1), pad=(0, 0), dilate=(1,1), num_group=1, name=None, suffix=''):
+    conv = mx.sym.Convolution(data=data, num_filter=num_filter, kernel=kernel, num_group=num_group, stride=stride, pad=pad, dilate=dilate, no_bias=True, name='%s%s_conv2d' %(name, suffix))
     bn = mx.sym.BatchNorm(data=conv, name='%s%s_batchnorm' %(name, suffix), fix_gamma=False,momentum=bn_mom)
     act = Act(data=bn, act_type='relu', name='%s%s_relu' %(name, suffix))
     return act
@@ -2570,8 +2571,8 @@ def Residual(data, num_block=1, num_out=1, kernel=(3, 3), stride=(1, 1), pad=(1,
     return identity
 	
 res_base_dim_big = 64
-#def L106_Net112_big(mode="train"):
-def L106_Net112(mode="train"):
+def L106_Net112_big(mode="train"):
+#def L106_Net112(mode="train"):
     """
     #Proposal Network
     #input shape 3 x 112 x 112
@@ -2616,8 +2617,8 @@ def L106_Net112(mode="train"):
     return group
 	
 res_base_dim = 8
-def L106_Net112_small(mode="train"):
-#def L106_Net112(mode="train"):
+#def L106_Net112_small(mode="train"):
+def L106_Net112(mode="train"):
     """
     #Proposal Network
     #input shape 3 x 112 x 112
@@ -2657,138 +2658,6 @@ def L106_Net112_small(mode="train"):
                                                  grad_scale=1, name="landmark_pred")
         out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
-	
-def L106_Net112_small_split(mode="train"):
-#def L106_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    # conv1 = 56X56
-    conv1 = Conv(data, num_filter=res_base_dim, kernel=(3, 3), pad=(1, 1), stride=(2, 2), name="conv1")
-    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim, name="res2")
-    
-	#conv23 = 28X28
-    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*2, name="dconv23")
-    conv3 = Residual(conv23, num_block=2, num_out=res_base_dim*2, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*2, name="res3")
-    
-	#conv34 = 14X14
-    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=3, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
-    
-	#conv45 = 7X7
-    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=2, num_out=res_base_dim*8, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
-    
-	# conv6 = 1x1
-    conv6_p1 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p1")
-    fc1_p1 = Conv(conv6_p1, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p1")
-    fc2_p1 = Conv(fc1_p1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p1")	
-    conv6_3_p1 = mx.symbol.FullyConnected(data=fc2_p1, num_hidden=66, name="conv6_3_p1")	
-    bn6_3_p1 = mx.sym.BatchNorm(data=conv6_3_p1, name='bn6_3_p1', fix_gamma=False,momentum=0.9)
-	
-    conv6_p2 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p2")
-    fc1_p2 = Conv(conv6_p2, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p2")
-    fc2_p2 = Conv(fc1_p2, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p2")	
-    conv6_3_p2 = mx.symbol.FullyConnected(data=fc2_p2, num_hidden=20, name="conv6_3_p2")	
-    bn6_3_p2 = mx.sym.BatchNorm(data=conv6_3_p2, name='bn6_3_p2', fix_gamma=False,momentum=0.9)
-	
-    conv6_p3 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p3")
-    fc1_p3 = Conv(conv6_p3, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p3")
-    fc2_p3 = Conv(fc1_p3, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p3")	
-    conv6_3_p3 = mx.symbol.FullyConnected(data=fc2_p3, num_hidden=42, name="conv6_3_p3")	
-    bn6_3_p3 = mx.sym.BatchNorm(data=conv6_3_p3, name='bn6_3_p3', fix_gamma=False,momentum=0.9)
-	
-    conv6_p4 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p4")
-    fc1_p4 = Conv(conv6_p4, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p4")
-    fc2_p4 = Conv(fc1_p4, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p4")	
-    conv6_3_p4 = mx.symbol.FullyConnected(data=fc2_p4, num_hidden=16, name="conv6_3_p4")	
-    bn6_3_p4 = mx.sym.BatchNorm(data=conv6_3_p4, name='bn6_3_p4', fix_gamma=False,momentum=0.9)
-	
-    conv6_p5 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p5")
-    fc1_p5 = Conv(conv6_p5, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p5")
-    fc2_p5 = Conv(fc1_p5, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p5")	
-    conv6_3_p5 = mx.symbol.FullyConnected(data=fc2_p5, num_hidden=24, name="conv6_3_p5")	
-    bn6_3_p5 = mx.sym.BatchNorm(data=conv6_3_p5, name='bn6_3_p5', fix_gamma=False,momentum=0.9)
-	
-    conv6_p6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p6")
-    fc1_p6 = Conv(conv6_p6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p6")
-    fc2_p6 = Conv(fc1_p6, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p6")	
-    conv6_3_p6 = mx.symbol.FullyConnected(data=fc2_p6, num_hidden=40, name="conv6_3_p6")	
-    bn6_3_p6 = mx.sym.BatchNorm(data=conv6_3_p6, name='bn6_3_p6', fix_gamma=False,momentum=0.9)
-	
-    conv6_p7 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6_p7")
-    fc1_p7 = Conv(conv6_p7, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1_p7")
-    fc2_p7 = Conv(fc1_p7, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2_p7")	
-    conv6_3_p7 = mx.symbol.FullyConnected(data=fc2_p7, num_hidden=4, name="conv6_3_p7")	
-    bn6_3_p7 = mx.sym.BatchNorm(data=conv6_3_p7, name='bn6_3_p7', fix_gamma=False,momentum=0.9)
-	
-    bn6_3 = mx.sym.Concat(*[bn6_3_p1,bn6_3_p2,bn6_3_p3,bn6_3_p4,bn6_3_p5,bn6_3_p6,bn6_3_p7])
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
-    else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
-	
-	
-res17_base_dim = 32
-#def L17_Net112_small(mode="train"):
-def L17_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    conv1 = Conv(data, num_filter=res17_base_dim, kernel=(11, 11), pad=(5, 5), dilate=(1,1), stride=(2, 2), name="conv1")
-    # conv1 = 56X56
-	
-    conv2 = Conv(conv1, num_filter=res17_base_dim*2, kernel=(7, 7), pad=(3, 3), dilate=(1,1), stride=(2, 2), name="conv2")
-    # conv2 = 28X28
-    conv3 = Conv(conv2, num_filter=res17_base_dim*4, kernel=(5, 5), pad=(2, 2), dilate=(1,1), stride=(2, 2), name="conv3")
-    # conv3 = 14X14
-	
-    conv4 = Conv(conv3, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv4")
-    # conv4 = 14X14
-	
-    conv5 = Conv(conv4, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv5")
-    # conv5 = 14X14
-	
-    conv6 = Conv(conv5, num_filter=res17_base_dim*4, kernel=(3, 3), pad=(1, 1), dilate=(1,1), stride=(1, 1), name="conv6")
-    # conv6 = 14X14
-	
-	
-    conv7 = Conv(conv6, num_filter=res17_base_dim*8, kernel=(14, 14), pad=(0, 0), stride=(1, 1), name="conv7")
-    # conv7 = 1x1
-    fc1 = Conv(conv7, num_filter=res17_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res17_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=34, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
-    else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark17', name="negative_mining")
         group = mx.symbol.Group([out])
         
     return group
@@ -2818,99 +2687,100 @@ def hourglass_block(data, data_dim, suffix=''):
     return identity
     
     
-    
-    
-def L106_Net112_v7(mode="train"):
-#def L106_Net112(mode="train"):
-    """
-    #Proposal Network
-    #input shape 3 x 112 x 112
-    """
-    data = mx.symbol.Variable(name="data")
-    landmark_target = mx.symbol.Variable(name="landmark_target")
-    
-    # data = 112X112
-    conv1 = Conv(data, num_filter=res_base_dim, kernel=(7, 7), pad=(3, 3), stride=(2, 2), name="conv1")
-    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(7, 7), stride=(1, 1), pad=(3, 3), num_group=res_base_dim, name="res2")
-    
-    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(7, 7), stride=(2, 2), pad=(3, 3), num_group=res_base_dim*2, name="dconv23")
-    # conv23 = 28x28
-    
-    blk1 = hourglass_block(data=conv23,data_dim=res_base_dim*2,suffix='_hg_blk1')
-    blk2 = hourglass_block(data=blk1,data_dim=res_base_dim*2,suffix='_hg_blk2')
-    
-    conv3 = Residual(blk2, num_block=1, num_out=res_base_dim*2, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*2, name="res3")
-    # conv3 = 28x28
+def HeatMapStage(data, out_channel, stage_id, in_feat = None):
+    id = int(stage_id)
+    conv1 = Conv(data, num_filter=heatmap_base_dim, kernel=(5, 5), pad=(4, 4), stride=(1, 1), dilate=(2,2), name="stg%d_conv1"%id)
+	# conv1 = 112X112
+    conv2_dw = Conv(conv1, num_filter=heatmap_base_dim, num_group= heatmap_base_dim, kernel=(7, 7), pad=(3, 3), stride=(1, 1), name="stg%d_conv2_dw"%id)
+    # conv2_dw = 112X112
+    conv2_sep = Conv(conv2_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv2_sep"%id)
+    # conv2_sep = 112X112
 	
-    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(5, 5), stride=(2, 2), pad=(2, 2), num_group=res_base_dim*4, name="dconv34")
-    conv4 = Residual(conv34, num_block=1, num_out=res_base_dim*4, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*4, name="res4")
-    # conv4 = 14x14
-	
-    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(5, 5), stride=(2, 2), pad=(2, 2), num_group=res_base_dim*8, name="dconv45")
-    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*8, kernel=(5, 5), stride=(1, 1), pad=(2, 2), num_group=res_base_dim*8, name="res5")
-    # conv5 = 7x7
-	
-    # conv6 = 1x1
-    conv6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
-    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
-    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
-    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
-    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
-    if mode == "test":
-        landmark_pred = bn6_3
-        group = mx.symbol.Group([landmark_pred])
+    conv3_dw = Conv(conv2_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(7, 7), pad=(3, 3), stride=(2, 2), dilate=(1,1), name="stg%d_conv3_dw"%id)
+    # conv3_dw = 56X56
+    conv3_sep = Conv(conv3_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv3_sep"%id)
+    # conv3_sep = 56X56
+    
+    conv4_dw = Conv(conv3_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(9, 9), pad=(8, 8), stride=(1, 1), dilate=(2,2), name="stg%d_conv4_dw"%id)
+    # conv4_dw = 56X56
+    conv4_sep = Conv(conv4_dw, num_filter=heatmap_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv4_sep"%id)
+    # conv4_sep = 56X56
+
+    conv5_dw = Conv(conv4_sep, num_filter=heatmap_base_dim*4, num_group=heatmap_base_dim*4, kernel=(7, 7), pad=(3, 3), stride=(2, 2), dilate=(1,1), name="stg%d_conv5_dw"%id)
+    # conv5_dw = 28X28
+    conv5_sep = Conv(conv5_dw, num_filter=heatmap_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv5_sep"%id)
+    # conv5_sep = 28X28
+    
+    if id == 1:
+        conv6_dw = Conv(conv5_sep, num_filter=heatmap_base_dim*4, num_group=heatmap_base_dim*4, kernel=(7, 7), pad=(6, 6), stride=(1, 1), dilate=(2,2), name="stg%d_conv6_dw"%id)
+        # conv6_dw = 28X28
+        conv6_sep = Conv(conv6_dw, num_filter=heatmap_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv6_sep"%id)
+        # conv6_sep = 28X28
     else:
-        
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106', name="negative_mining")
-        group = mx.symbol.Group([out])
-        
-    return group
+        concat = mx.symbol.Concat(*[conv5_sep,in_feat],name="stg%d_concat"%id)
+        conv6_sep = Conv(concat, num_filter=heatmap_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv6_sep"%id)
+        # conv6_sep = 28X28
+    
 	
+    conv7_dw = Conv(conv6_sep, num_filter=heatmap_base_dim*4, num_group=heatmap_base_dim*4, kernel=(7, 7), pad=(3, 3), stride=(1, 1), dilate=(1,1), name="stg%d_conv7_dw"%id)
+    # conv7_dw = 28X28
+    conv7_sep = Conv(conv7_dw, num_filter=heatmap_base_dim*8, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv7_sep"%id)
+    # conv7_sep = 28X28
+	
+    conv8_dw = Conv(conv7_sep, num_filter=heatmap_base_dim*8, num_group=heatmap_base_dim*8, kernel=(7, 7), pad=(3, 3), stride=(1, 1), dilate=(1,1), name="stg%d_conv8_dw"%id)
+    # conv8_dw = 28X28
+    conv8_sep = Conv(conv8_dw, num_filter=heatmap_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_conv8_sep"%id)
+    # conv8_sep = 28X28
+	
+    feat = ConvOnly(feat2_sep, num_filter=out_channel, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="stg%d_feat"%id)
+    feat_bn = mx.sym.BatchNorm(data=feat, name='stg%d_feat_bn'%id, fix_gamma=False,momentum=0.9)
+	
+    return feat_bn
 
 heatmap_base_dim = 8
-#def L106_Net112_heatmap_v1(mode="train"):
-def L106_Net112_heatmap(mode="train"):
+def L14_Net112_heatmap(mode="train"):
     """
     #Proposal Network
     #input shape 3 x 112 x 112
     """
     data = mx.symbol.Variable(name="data")
     landmark_target = mx.symbol.Variable(name="landmark_target")
-    
     # data = 112X112
     
-    conv1 = Conv(data, num_filter=heatmap_base_dim, kernel=(3, 3), pad=(1, 1), stride=(2, 2), name="conv1")
-    conv1_sep = Conv(conv1, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv1_sep")
-    # conv1_sep = 56X56
+    stg1_feat = HeatMapStage(data, 15, 1)
+    if config.HeatMapStage > 1:
+        stg2_feat = HeatMapStage(data, 15, 2, stg1_feat)
+    if config.HeatMapStage > 2:
+        stg3_feat = HeatMapStage(data, 15, 3, stg2_feat)
+    if config.HeatMapStage > 3:
+        stg4_feat = HeatMapStage(data, 15, 4, stg3_feat)
+    if config.HeatMapStage > 4:
+        stg5_feat = HeatMapStage(data, 15, 5, stg4_feat)
+    if config.HeatMapStage > 5:
+        stg6_feat = HeatMapStage(data, 15, 6, stg5_feat)
+    if config.HeatMapStage > 6:
+        stg7_feat = HeatMapStage(data, 15, 7, stg6_feat)
+    if config.HeatMapStage > 7:
+        stg8_feat = HeatMapStage(data, 15, 8, stg7_feat)
 	
-    conv2_dw = Conv(conv1_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="conv2_dw")
-    conv2_sep = Conv(conv2_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv2_sep")
-    # conv2_sep = 56X56
+    if config.HeatMapStage == 1:
+        heatmap = stg1_feat
+    else if config.HeatMapStage == 2:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat],name='feat_concat')
+    else if config.HeatMapStage == 3:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat],name='feat_concat')
+    else if config.HeatMapStage == 4:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat],name='feat_concat')
+    else if config.HeatMapStage == 5:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat],name='feat_concat')
+    else if config.HeatMapStage == 6:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat],name='feat_concat')
+    else if config.HeatMapStage == 7:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat,stg7_feat],name='feat_concat')
+    else if config.HeatMapStage == 8:
+        heatmap = mx.sym.Concat(*[stg1_feat,stg2_feat,stg3_feat,stg4_feat,stg5_feat,stg6_feat,stg7_feat,stg8_feat],name='feat_concat')
     
-    conv3_dw = Conv(conv2_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv3_dw")
-    conv3_sep = Conv(conv3_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv3_sep")
-    # conv3_sep = 28X28
-	
-    conv4_dw = Conv(conv3_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv4_dw")
-    conv4_sep = Conv(conv4_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv4_sep")
-    # conv4_sep = 14X14
-    
-    conv5_dw = Conv(conv4_sep, num_filter=heatmap_base_dim*2, num_group=heatmap_base_dim*2, kernel=(5, 5), pad=(2, 2), stride=(2, 2), name="conv5_dw")
-    conv5_sep = Conv(conv5_dw, num_filter=heatmap_base_dim*2, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="conv5_sep")
-    # conv5_sep = 7X7
-	
-    conv4_up = mx.symbol.UpSampling(conv4_sep, scale=2, sample_type='nearest', name="conv4_up")
-    conv5_up = mx.symbol.UpSampling(conv5_sep, scale=4, sample_type='nearest', name="conv5_up")
-    feat1 = mx.symbol.Concat(*[conv3_sep,conv4_up,conv5_up],name="feat1")
-    feat1_sep = Conv(feat1, num_filter=res_base_dim*3, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat1_sep")
-    feat2_dw = Conv(feat1_sep, num_filter=res_base_dim*3, num_group=res_base_dim*3, kernel=(5, 5), pad=(2, 2), stride=(1, 1), name="feat2_dw")
-    feat2_sep = Conv(feat2_dw, num_filter=res_base_dim*4, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="feat2_sep")
-    heatmap = ConvOnly(feat2_sep, num_filter=106, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="heatmap")
-    heatmap_bn = mx.sym.BatchNorm(data=heatmap, name='heammap_bn', fix_gamma=False,momentum=0.9)
-    heatmap_flat = mx.sym.Flatten(heatmap_bn)
+    heatmap_flat = mx.sym.Flatten(heatmap)
     if mode == "test":
         landmark_pred = heatmap_flat
         group = mx.symbol.Group([landmark_pred])
@@ -2919,7 +2789,7 @@ def L106_Net112_heatmap(mode="train"):
         landmark_pred = mx.symbol.LinearRegressionOutput(data=heatmap_flat, label=landmark_target,
                                                  grad_scale=1, name="landmark_pred")
         out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
-                            op_type='negativemining_onlylandmark106_heatmap', name="negative_mining")
+                            op_type='negativemining_onlylandmark14_heatmap', name="negative_mining")
         group = mx.symbol.Group([out])
         
     return group
