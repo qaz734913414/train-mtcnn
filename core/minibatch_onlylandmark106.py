@@ -106,17 +106,25 @@ def augment_for_one_image(annotation_line, size):
         rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark106(cx,cy,landmark_x,landmark_y, cur_angle,1)
         #cur_size = int(npr.randint(10, 21)*0.1*bbox_size)
         cur_size = int(npr.randint(10, 16)*0.1*bbox_size)
+        #cur_size = int(npr.randint(100, 126)*0.01*bbox_size)
         up_border_size = int(-cur_size*0.15)
         down_border_size = int(-cur_size*0.15)
         left_border_size = int(-cur_size*0.15)
         right_border_size = int(-cur_size*0.15)
+        #up_border_size = int(cur_size*0.1)
+        #down_border_size = int(-cur_size*0.05)
+        #left_border_size = int(cur_size*0.02)
+        #right_border_size = int(cur_size*0.02)
 
         # delta here is the offset of box center
         #delta_x = npr.randint(-int(w * 0.35), int(w * 0.35)+1)
         #delta_y = npr.randint(-int(h * 0.35), int(h * 0.35)+1)
         delta_x = npr.randint(-int(w * 0.20), int(w * 0.20)+1)
         delta_y = npr.randint(-int(h * 0.20), int(h * 0.20)+1)
-				
+        #delta_x = npr.randint(-int(w * 0.1), int(w * 0.1)+1)
+        #delta_y = npr.randint(-int(h * 0.15), int(h * 0.00)+1)
+		
+		
         nx1 = int(max(x1 + w / 2 + delta_x - cur_size / 2, 0))
         ny1 = int(max(y1 + h / 2 + delta_y - cur_size / 2, 0))
         nx2 = nx1 + cur_size
@@ -165,6 +173,41 @@ def augment_for_one_image(annotation_line, size):
         offset_x = (landmark_x - nx1+0.5)/float(cur_size)
         offset_y = (landmark_y - ny1+0.5)/float(cur_size)
     
+    if config.landmark106_migu_random_flip:
+        flip_val = npr.randint(0,2)
+        if flip_val == 1:
+            tmp_arr1_x, tmp_arr1_y = offset_x[0:33], offset_y[0:33]
+            offset_x[0:33], offset_y[0:33] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[33:43], offset_y[33:43]
+            offset_x[33:43], offset_y[33:43] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[43:47], offset_y[43:47]
+            offset_x[43:47], offset_y[43:47] = 1 - tmp_arr1_x, tmp_arr1_y
+            tmp_arr1_x, tmp_arr1_y = offset_x[47:52], offset_y[47:52]
+            offset_x[47:52], offset_y[47:52] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y, tmp_arr2_x, tmp_arr2_y = offset_x[52:56], offset_y[52:56], offset_x[58:62], offset_y[58:62]
+            offset_x[52:56], offset_y[52:56], offset_x[58:62], offset_y[58:62] = 1 - tmp_arr2_x[::-1], tmp_arr2_y[::-1], 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y, tmp_arr2_x, tmp_arr2_y = offset_x[56:58], offset_y[56:58], offset_x[62:64], offset_y[62:64]
+            offset_x[56:58], offset_y[56:58], offset_x[62:64], offset_y[62:64] = 1 - tmp_arr2_x[::-1], tmp_arr2_y[::-1], 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[64:72], offset_y[64:72]
+            offset_x[64:72], offset_y[64:72] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y, tmp_arr2_x, tmp_arr2_y = offset_x[72:75], offset_y[72:75], offset_x[75:78], offset_y[75:78]
+            offset_x[72:75], offset_y[72:75], offset_x[75:78], offset_y[75:78] = 1 - tmp_arr2_x, tmp_arr2_y, 1 - tmp_arr1_x, tmp_arr1_y
+            offset_x[78], offset_y[78], offset_x[79], offset_y[79] = 1 - offset_x[79], offset_y[79], 1 - offset_x[78], offset_y[78]
+            offset_x[80], offset_y[80], offset_x[81], offset_y[81] = 1 - offset_x[81], offset_y[81], 1 - offset_x[80], offset_y[80]
+            offset_x[82], offset_y[82], offset_x[83], offset_y[83] = 1 - offset_x[83], offset_y[83], 1 - offset_x[82], offset_y[82]
+            tmp_arr1_x, tmp_arr1_y = offset_x[84:91], offset_y[84:91]
+            offset_x[84:91], offset_y[84:91] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[91:96], offset_y[91:96]
+            offset_x[91:96], offset_y[91:96] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[96:101], offset_y[96:101]
+            offset_x[96:101], offset_y[96:101] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            tmp_arr1_x, tmp_arr1_y = offset_x[101:104], offset_y[101:104]
+            offset_x[101:104], offset_y[101:104] = 1 - tmp_arr1_x[::-1], tmp_arr1_y[::-1]
+            offset_x[104], offset_y[104], offset_x[105], offset_y[105] = 1 - offset_x[105], offset_y[105], 1 - offset_x[104], offset_y[104]
+            resized_im = resized_im[:,::-1,:]
+			
+			
+			
     if config.landmark106_migu_weighting:
         landmark[0:66:2] = offset_x[0:33]
         landmark[1:67:2] = offset_y[0:33]
@@ -183,6 +226,8 @@ def augment_for_one_image(annotation_line, size):
     else:
         landmark[0::2] = offset_x
         landmark[1::2] = offset_y
+		
+    
     
     
     if config.enable_blur:
