@@ -104,29 +104,42 @@ def augment_for_one_image(annotation_line, size):
             force_accept = 1
             break
         rot_landmark_x,rot_landmark_y = image_processing.rotateLandmark106(cx,cy,landmark_x,landmark_y, cur_angle,1)
-        #cur_size = int(npr.randint(10, 21)*0.1*bbox_size)
-        cur_size = int(npr.randint(10, 16)*0.1*bbox_size)
-        #cur_size = int(npr.randint(100, 126)*0.01*bbox_size)
+        rot_max_x = max(rot_landmark_x)
+        rot_min_x = min(rot_landmark_x)
+        rot_max_y = max(rot_landmark_y)
+        rot_min_y = min(rot_landmark_y)
+        rot_cx = 0.5*(rot_max_x+rot_min_x)
+        rot_cy = 0.5*(rot_max_y+rot_min_y)
+        rot_w = rot_max_x-rot_min_x
+        rot_h = rot_max_y-rot_min_y
+        rot_bbox_size = max(rot_h,rot_w)
+        rot_x1 = int(rot_cx - rot_bbox_size*0.5)
+        rot_y1 = int(rot_cy - rot_bbox_size*0.5)
+        rot_w = rot_bbox_size
+        rot_h = rot_bbox_size
+        #cur_size = int(npr.randint(10, 21)*0.1*rot_bbox_size)
+        cur_size = int(npr.randint(10, 16)*0.1*rot_bbox_size)
+        #cur_size = int(npr.randint(110, 126)*0.01*rot_bbox_size)
         up_border_size = int(-cur_size*0.15)
         down_border_size = int(-cur_size*0.15)
         left_border_size = int(-cur_size*0.15)
         right_border_size = int(-cur_size*0.15)
-        #up_border_size = int(cur_size*0.1)
-        #down_border_size = int(-cur_size*0.05)
-        #left_border_size = int(cur_size*0.02)
-        #right_border_size = int(cur_size*0.02)
+        #up_border_size = int(cur_size*0.05)
+        #down_border_size = int(cur_size*0.05)
+        #left_border_size = int(cur_size*0.05)
+        #right_border_size = int(cur_size*0.05)
 
         # delta here is the offset of box center
-        #delta_x = npr.randint(-int(w * 0.35), int(w * 0.35)+1)
-        #delta_y = npr.randint(-int(h * 0.35), int(h * 0.35)+1)
-        delta_x = npr.randint(-int(w * 0.20), int(w * 0.20)+1)
-        delta_y = npr.randint(-int(h * 0.20), int(h * 0.20)+1)
-        #delta_x = npr.randint(-int(w * 0.1), int(w * 0.1)+1)
-        #delta_y = npr.randint(-int(h * 0.15), int(h * 0.00)+1)
+        #delta_x = npr.randint(-int(rot_w * 0.35), int(rot_w * 0.35)+1)
+        #delta_y = npr.randint(-int(rot_h * 0.35), int(rot_h * 0.35)+1)
+        delta_x = npr.randint(-int(rot_w * 0.20), int(rot_w * 0.20)+1)
+        delta_y = npr.randint(-int(rot_h * 0.20), int(rot_h * 0.20)+1)
+        #delta_x = npr.randint(-int(rot_w * 0.02), int(rot_w * 0.02)+1)
+        #delta_y = npr.randint(-int(rot_h * 0.02), int(rot_h * 0.02)+1)
 		
 		
-        nx1 = int(max(x1 + w / 2 + delta_x - cur_size / 2, 0))
-        ny1 = int(max(y1 + h / 2 + delta_y - cur_size / 2, 0))
+        nx1 = int(max(x1 + rot_w / 2 + delta_x - cur_size / 2, 0))
+        ny1 = int(max(y1 + rot_h / 2 + delta_y - cur_size / 2, 0))
         nx2 = nx1 + cur_size
         ny2 = ny1 + cur_size
 
