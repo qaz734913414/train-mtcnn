@@ -84,8 +84,8 @@ def augment_for_one_image(annotation_line, size):
     min_y = min(landmark_y)
     cx = 0.5*(max_x+min_x)
     cy = 0.5*(max_y+min_y)
-    h = max_x-min_x
-    w = max_y-min_y
+    w = max_x-min_x
+    h = max_y-min_y
     bbox_size = max(h,w)
     x1 = int(cx - bbox_size*0.5)
     y1 = int(cy - bbox_size*0.5)
