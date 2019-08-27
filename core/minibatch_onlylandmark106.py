@@ -138,8 +138,8 @@ def augment_for_one_image(annotation_line, size):
         #delta_y = npr.randint(-int(rot_h * 0.02), int(rot_h * 0.02)+1)
 		
 		
-        nx1 = int(max(x1 + rot_w / 2 + delta_x - cur_size / 2, 0))
-        ny1 = int(max(y1 + rot_h / 2 + delta_y - cur_size / 2, 0))
+        nx1 = int(max(rot_x1 + rot_w / 2 + delta_x - cur_size / 2, 0))
+        ny1 = int(max(rot_y1 + rot_h / 2 + delta_y - cur_size / 2, 0))
         nx2 = nx1 + cur_size
         ny2 = ny1 + cur_size
 
