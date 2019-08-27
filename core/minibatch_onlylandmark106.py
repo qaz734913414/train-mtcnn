@@ -93,7 +93,17 @@ def augment_for_one_image(annotation_line, size):
     h = bbox_size
  
 
-    cur_angle = npr.randint(int(config.min_rot_angle),int(config.max_rot_angle)+1)
+    init_rot = 0
+    if config.landmark106_migu_init_rot:
+        eye_cx = 0.25*(landmark_x[52]+landmark_x[55]+landmark_x[58]+landmark_x[61])
+        eye_cy = 0.25*(landmark_y[52]+landmark_y[55]+landmark_y[58]+landmark_y[61])
+        mouth_cx = 0.25*(landmark_x[84]+landmark_x[96]+landmark_x[100]+landmark_x[90])
+        mouth_cy = 0.25*(landmark_y[84]+landmark_y[96]+landmark_y[100]+landmark_y[90])
+        dir_x = mouth_cx - eye_cx
+        dir_y = mouth_cy - eye_cy
+        init_rot = 90 - math.atan2(dir_y, dir_x)/math.pi*180
+		
+    cur_angle = npr.randint(int(config.min_rot_angle - init_rot),int(config.max_rot_angle - init_rot)+1)
     try_num = 0
     cur_sample_num = 0
     base_num = 1
