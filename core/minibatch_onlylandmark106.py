@@ -260,4 +260,10 @@ def augment_for_one_image(annotation_line, size):
             blur_im = cv2.GaussianBlur(resized_im,(kernel_size,kernel_size),0)
             resized_im = blur_im
     
+    if config.enable_black_border:
+        black_size = npr.randint(0,int(size*0.5))
+        if npr.randint(0,2) == 0:
+            resized_im[:,0:black_size,:] = 0
+        else:
+            resized_im[:,(size-black_size):size,:] = 0
     return resized_im,landmark

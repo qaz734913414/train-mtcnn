@@ -22,6 +22,7 @@ config.use_landmark10 = False
 config.landmark106_migu_weighting = False
 config.landmark106_migu_random_flip = False
 config.landmark106_migu_init_rot = False
+config.enable_black_border = False
 config.HeatMapSize = 32
 config.HeatMapSigma = 3
 config.HeatMapStage = 3

@@ -37,6 +37,9 @@ def get_minibatch_thread(imdb, num_classes, im_size, with_type, with_cls, with_b
         if with_cls:
             cls = imdb[i]['label']
             cls_label.append(cls)
+            if config.enable_black_border:
+                fill_len = np.random.randint(0,im_size*0.6)
+                im[:,0:fill_len,:] = 0
         if with_bbox:
             bbox_target = imdb[i]['bbox_target']
             bbox_reg_target.append(bbox_target)

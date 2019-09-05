@@ -205,6 +205,13 @@ def gen_landmark_for_one_image(size, idx, img, landmark_save_dir, landmarks, bas
                 resized_im = resized_im[:,::-1,:]
         
         
+        if config.enable_black_border:
+            black_size = npr.randint(0,int(size*0.5))
+            if npr.randint(0,2) == 0:
+                resized_im[:,0:black_size,:] = 0
+            else:
+                resized_im[:,(size-black_size):size,:] = 0
+
         save_file = '%s/%d_%d.jpg'%(landmark_save_dir,idx,landmark_num)
         if cv2.imwrite(save_file, resized_im):
             line = '%s/%d_%d'%(landmark_save_dir,idx,landmark_num)
