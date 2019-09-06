@@ -263,7 +263,7 @@ def augment_for_one_image(annotation_line, size):
     if config.enable_black_border:
         black_size = npr.randint(0,int(size*0.5))
         if npr.randint(0,2) == 0:
-            resized_im[:,0:black_size,:] = 0
+            resized_im[:,0:black_size,:] = 128
         else:
-            resized_im[:,(size-black_size):size,:] = 0
+            resized_im[:,(size-black_size):size,:] = 128
     return resized_im,landmark
