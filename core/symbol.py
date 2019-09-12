@@ -2597,6 +2597,50 @@ def L106_Net112(mode="train"):
         
     return group
 	
+def L106_Net112_s(mode="train"):
+    """
+    #Proposal Network
+    #input shape 3 x 112 x 112
+    """
+    data = mx.symbol.Variable(name="data")
+    landmark_target = mx.symbol.Variable(name="landmark_target")
+    
+    # data = 112X112
+    # conv1 = 56X56
+    conv1 = Conv(data, num_filter=res_base_dim, kernel=(3, 3), pad=(1, 1), stride=(2, 2), name="conv1")
+    conv2 = Residual(conv1, num_block=1, num_out= res_base_dim, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim, name="res2")
+    
+	#conv23 = 28X28
+    conv23 = DResidual(conv2, num_out=res_base_dim*2, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*2, name="dconv23")
+    conv3 = Residual(conv23, num_block=1, num_out=res_base_dim*2, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*2, name="res3")
+    
+	#conv34 = 14X14
+    conv34 = DResidual(conv3, num_out=res_base_dim*4, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*4, name="dconv34")
+    conv4 = Residual(conv34, num_block=1, num_out=res_base_dim*4, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*4, name="res4")
+    
+	#conv45 = 7X7
+    conv45 = DResidual(conv4, num_out=res_base_dim*8, kernel=(3, 3), stride=(2, 2), pad=(1, 1), num_group=res_base_dim*8, name="dconv45")
+    conv5 = Residual(conv45, num_block=1, num_out=res_base_dim*8, kernel=(3, 3), stride=(1, 1), pad=(1, 1), num_group=res_base_dim*8, name="res5")
+    
+	# conv6 = 1x1
+    conv6 = Conv(conv5, num_filter=res_base_dim*8, kernel=(7, 7), pad=(0, 0), stride=(1, 1), name="conv6")
+    fc1 = Conv(conv6, num_filter=res_base_dim*16, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc1")
+    fc2 = Conv(fc1, num_filter=res_base_dim*32, kernel=(1, 1), pad=(0, 0), stride=(1, 1), name="fc2")	
+    conv6_3 = mx.symbol.FullyConnected(data=fc2, num_hidden=212, name="conv6_3")	
+    bn6_3 = mx.sym.BatchNorm(data=conv6_3, name='bn6_3', fix_gamma=False,momentum=0.9)
+    if mode == "test":
+        landmark_pred = bn6_3
+        group = mx.symbol.Group([landmark_pred])
+    else:
+        
+        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+                                                 grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+                            op_type='negativemining_onlylandmark106', name="negative_mining")
+        group = mx.symbol.Group([out])
+        
+    return group
+	
 def L106_Net96(mode="train"):
     """
     #Proposal Network
