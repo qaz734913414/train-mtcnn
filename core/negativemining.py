@@ -66,7 +66,7 @@ class NegativeMiningOperator(mx.operator.CustomOp):
 
         cls_grad = cls_grad.reshape(in_data[0].shape)
         self.assign(in_grad[0], req[0], mx.nd.array(cls_grad))
-        self.assign(in_grad[1], req[1], mx.nd.array(bbox_grad))
+        self.assign(in_grad[2], req[2], mx.nd.array(bbox_grad))
 
 
 @mx.operator.register("negativemining")
