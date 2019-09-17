@@ -55,15 +55,27 @@ class NegativeMiningOperator(mx.operator.CustomOp):
 
 
     def backward(self, req, out_grad, in_data, out_data, in_grad, aux):
+        cls_prob = in_data[0].asnumpy() # batchsize x 2 x 1 x 1
+        label = in_data[1].asnumpy().astype(int) # batchsize x 1
+        bbox_pred = in_data[2].asnumpy() # batchsize x 4
+        bbox_target = in_data[3].asnumpy() # batchsize x 4
         cls_keep = out_data[1].asnumpy().reshape(-1, 1)
+        cls_keep_repeat = np.repeat(cls_keep,2,axis=1)
         bbox_keep = out_data[3].asnumpy().reshape(-1, 1)
-
-        cls_grad = np.repeat(cls_keep, 2, axis=1)
-        bbox_grad = np.repeat(bbox_keep, 4, axis=1)
-
+        bbox_keep_repeat = np.repeat(bbox_keep,4,axis=1)
+        
+        cls_target = np.zeros(cls_prob.shape)
+        for i in range(cls_prob.shape[0]):
+            if label[i] >= 0:
+                cls_target[i][label[i]] = 1
+        cls_grad = cls_prob - cls_target
         cls_grad /= len(np.where(cls_keep == 1)[0])
-        bbox_grad /= len(np.where(bbox_keep == 1)[0])
+        cls_grad *= cls_keep_repeat * 1
 
+        bbox_grad = 2*(bbox_pred - bbox_target)
+        bbox_grad /= len(np.where(bbox_keep == 1)[0])
+        bbox_grad *= bbox_keep_repeat * 2
+        #print('backward')
         cls_grad = cls_grad.reshape(in_data[0].shape)
         self.assign(in_grad[0], req[0], mx.nd.array(cls_grad))
         self.assign(in_grad[2], req[2], mx.nd.array(bbox_grad))

@@ -39,14 +39,12 @@ def P_Net16(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -89,14 +87,12 @@ def P_Net16_v1(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -166,14 +162,12 @@ def P_Net20_p(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -216,14 +210,12 @@ def P_Net20_v00(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -266,14 +258,12 @@ def P_Net20(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -321,14 +311,12 @@ def P_Net20_v1(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape,  mode="channel",  name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -376,14 +364,12 @@ def P_Net20_v2(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -430,14 +416,12 @@ def P_Net20_v3(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -485,14 +469,12 @@ def P_Net20_v4(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -539,14 +521,12 @@ def P_Net20_v5(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -594,14 +574,12 @@ def P_Net20_v6(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -652,14 +630,12 @@ def P_Net20_v7(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -707,14 +683,12 @@ def P_Net20_v8(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -767,14 +741,12 @@ def P_Net20_s2v1(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -827,14 +799,12 @@ def P_Net20_s2v2(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -887,14 +857,12 @@ def P_Net20_s2v3(mode='train'):
         
     else:
         conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
-                                           multi_output=True, use_ignore=True,
-                                           name="cls_prob")
+        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1_reshape, mode="channel", name="cls_prob")
         conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred,bbox_target=bbox_target,
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=conv4_2_reshape,bbox_target=bbox_target,
                                op_type='negativemining', name="negative_mining")
         
         group = mx.symbol.Group([out])
@@ -949,7 +917,7 @@ def R_Net_p0(mode='train'):
 	
     conv5_1 = mx.symbol.FullyConnected(data=fc2_relu_dw, num_hidden=2, name="conv5_1")
     bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn5_1, mode = "channel", name="cls_prob")
 	
     conv4_bb_dw = mx.symbol.Convolution(data=relu3, kernel=(3, 3), num_filter=32, num_group=32, name="conv4_bb_dw")#5/3
     bn4_bb_dw = mx.sym.BatchNorm(data=conv4_bb_dw, name='bn4_bb_dw', fix_gamma=False,momentum=0.9)
@@ -976,10 +944,10 @@ def R_Net_p0(mode='train'):
         bbox_pred = bn5_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn5_2, bbox_target=bbox_target, 
                                 op_type='negativemining', name="negative_mining")
 
         group = mx.symbol.Group([out])
@@ -1034,7 +1002,7 @@ def R_Net_p(mode='train'):
 	
     conv5_1 = mx.symbol.FullyConnected(data=fc2_relu_dw, num_hidden=2, name="conv5_1")
     bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn5_1, mode = "channel", name="cls_prob")
 	
     conv4_bb_dw = mx.symbol.Convolution(data=relu3, kernel=(3, 3), num_filter=64, num_group=64, name="conv4_bb_dw")#5/3
     bn4_bb_dw = mx.sym.BatchNorm(data=conv4_bb_dw, name='bn4_bb_dw', fix_gamma=False,momentum=0.9)
@@ -1061,10 +1029,10 @@ def R_Net_p(mode='train'):
         bbox_pred = bn5_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn5_2, bbox_target=bbox_target, 
                                 op_type='negativemining', name="negative_mining")
 
         group = mx.symbol.Group([out])
@@ -1105,15 +1073,15 @@ def R_Net(mode='train'):
     bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
     conv5_2 = mx.symbol.FullyConnected(data=prelu5_dw, num_hidden=4, name="conv5_2")
     bn5_2 = mx.sym.BatchNorm(data=conv5_2, name='bn5_2', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn5_1, mode="channel",  name="cls_prob")
     if mode == 'test':
         bbox_pred = bn5_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn5_2, bbox_target=bbox_target, 
                                 op_type='negativemining', name="negative_mining")
 
         group = mx.symbol.Group([out])
@@ -1164,15 +1132,15 @@ def R_Net_v2(mode='train'):
     bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
     conv5_2 = mx.symbol.FullyConnected(data=prelu7_dw, num_hidden=4, name="conv5_2")
     bn5_2 = mx.sym.BatchNorm(data=conv5_2, name='bn5_2', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn5_1, mode = "channel", name="cls_prob")
     if mode == 'test':
         bbox_pred = bn5_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
+        #                                             grad_scale=1, name="bbox_pred")
 
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn5_2, bbox_target=bbox_target, 
                                 op_type='negativemining', name="negative_mining")
 
         group = mx.symbol.Group([out])
@@ -1234,7 +1202,7 @@ def O_Net_p0(mode="train", with_landmark = False):
 	
     conv6_1 = mx.symbol.FullyConnected(data=fc2_relu, num_hidden=2, name="conv6_1")
     bn6_1 = mx.sym.BatchNorm(data=conv6_1, name='bn6_1', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode = "channel", name="cls_prob")
 	
     conv5_bb_dw = mx.symbol.Convolution(data=relu4, kernel=(3, 3), num_filter=32, num_group=32, name="conv5_bb_dw") #5/3
     bn5_bb_dw = mx.sym.BatchNorm(data=conv5_bb_dw, name='bn5_bb_dw', fix_gamma=False,momentum=0.9)
@@ -1261,10 +1229,9 @@ def O_Net_p0(mode="train", with_landmark = False):
         bbox_pred = bn6_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                 grad_scale=1, name="bbox_pred")
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+        #                                         grad_scale=1, name="bbox_pred")
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
                            op_type='negativemining', name="negative_mining")
         group = mx.symbol.Group([out])
     return group
@@ -1325,7 +1292,7 @@ def O_Net_p(mode="train", with_landmark = False):
 	
     conv6_1 = mx.symbol.FullyConnected(data=fc2_relu, num_hidden=2, name="conv6_1")
     bn6_1 = mx.sym.BatchNorm(data=conv6_1, name='bn6_1', fix_gamma=False,momentum=0.9)
-    cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
+    cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode = "channel", name="cls_prob")
 	
     conv5_bb_dw = mx.symbol.Convolution(data=relu4, kernel=(3, 3), num_filter=64, num_group=64, name="conv5_bb_dw") #5/3
     bn5_bb_dw = mx.sym.BatchNorm(data=conv5_bb_dw, name='bn5_bb_dw', fix_gamma=False,momentum=0.9)
@@ -1352,10 +1319,9 @@ def O_Net_p(mode="train", with_landmark = False):
         bbox_pred = bn6_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                 grad_scale=1, name="bbox_pred")
-        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+        #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+        #                                         grad_scale=1, name="bbox_pred")
+        out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
                            op_type='negativemining', name="negative_mining")
         group = mx.symbol.Group([out])
     return group
@@ -1422,13 +1388,13 @@ def O_Net(mode="train", with_landmark = False):
             landmark_pred = bn6_3
             group = mx.symbol.Group([cls_prob, bbox_pred, landmark_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
-                                landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel",  name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
+                                landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 type_label=type_label, op_type='negativemining_landmark', name="negative_mining")
             group = mx.symbol.Group([out])
     else:
@@ -1468,10 +1434,10 @@ def O_Net(mode="train", with_landmark = False):
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel", name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
                                op_type='negativemining', name="negative_mining")
             group = mx.symbol.Group([out])
     return group
@@ -1538,13 +1504,13 @@ def O_Net_v2(mode="train", with_landmark = False):
             landmark_pred = bn6_3
             group = mx.symbol.Group([cls_prob, bbox_pred, landmark_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
-                                landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode = "channel", name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
+                                landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 type_label=type_label, op_type='negativemining_landmark', name="negative_mining")
             group = mx.symbol.Group([out])
     else:
@@ -1584,10 +1550,10 @@ def O_Net_v2(mode="train", with_landmark = False):
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode="channel", name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
                                op_type='negativemining', name="negative_mining")
             group = mx.symbol.Group([out])
     return group
@@ -1654,13 +1620,13 @@ def O_Net_v3(mode="train", with_landmark = False):
             landmark_pred = bn6_3
             group = mx.symbol.Group([cls_prob, bbox_pred, landmark_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
-                                landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode = "channel", name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
+                                landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 type_label=type_label, op_type='negativemining_landmark', name="negative_mining")
             group = mx.symbol.Group([out])
     else:
@@ -1731,10 +1697,10 @@ def O_Net_v3(mode="train", with_landmark = False):
             bbox_pred = bn6_2
             group = mx.symbol.Group([cls_prob, bbox_pred])
         else:
-            cls_prob = mx.symbol.SoftmaxOutput(data=bn6_1, label=label, use_ignore=True, name="cls_prob")
-            bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
-                                                     grad_scale=1, name="bbox_pred")
-            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
+            cls_prob = mx.symbol.SoftmaxActivation(data=bn6_1, mode = "channel", name="cls_prob")
+            #bbox_pred = mx.symbol.LinearRegressionOutput(data=bn6_2, label=bbox_target,
+            #                                         grad_scale=1, name="bbox_pred")
+            out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bn6_2, bbox_target=bbox_target, 
                                op_type='negativemining', name="negative_mining")
             group = mx.symbol.Group([out])
     return group
@@ -1820,26 +1786,26 @@ def L_Net(mode="train"):
             bn_y3 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=7, end=8)
             bn_y4 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=8, end=9)
             bn_y5 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=9, end=10)
-            pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
-            pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
-            pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
-            pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
-            pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
-            pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
-            pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
-            pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
-            pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
-            pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
-            out = mx.symbol.Custom(pred_x1=pred_x1,pred_x2=pred_x2,pred_x3=pred_x3,pred_x4=pred_x4,pred_x5=pred_x5,
-                                pred_y1=pred_y1,pred_y2=pred_y2,pred_y3=pred_y3,pred_y4=pred_y4,pred_y5=pred_y5,
+            #pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
+            #pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
+            #pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
+            #pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
+            #pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
+            #pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
+            #pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
+            #pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
+            #pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
+            #pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
+            out = mx.symbol.Custom(pred_x1=bn_x1,pred_x2=bn_x2,pred_x3=bn_x3,pred_x4=bn_x4,pred_x5=bn_x5,
+                                pred_y1=bn_y1,pred_y2=bn_y2,pred_y3=bn_y3,pred_y4=bn_y4,pred_y5=bn_y5,
                                 target_x1=target_x1,target_x2=target_x2,target_x3=target_x3,target_x4=target_x4,target_x5=target_x5,
                                 target_y1=target_y1,target_y2=target_y2,target_y3=target_y3,target_y4=target_y4,target_y5=target_y5,
                                 op_type='negativemining_onlylandmark10', name="negative_mining") 
             group = mx.symbol.Group([out])
         else:
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 op_type='negativemining_onlylandmark', name="negative_mining")
             group = mx.symbol.Group([out])
         
@@ -1942,26 +1908,26 @@ def L_Net_v2(mode="train"):
             bn_y3 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=7, end=8)
             bn_y4 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=8, end=9)
             bn_y5 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=9, end=10)
-            pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
-            pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
-            pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
-            pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
-            pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
-            pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
-            pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
-            pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
-            pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
-            pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
-            out = mx.symbol.Custom(pred_x1=pred_x1,pred_x2=pred_x2,pred_x3=pred_x3,pred_x4=pred_x4,pred_x5=pred_x5,
-                                pred_y1=pred_y1,pred_y2=pred_y2,pred_y3=pred_y3,pred_y4=pred_y4,pred_y5=pred_y5,
+            #pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
+            #pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
+            #pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
+            #pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
+            #pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
+            #pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
+            #pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
+            #pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
+            #pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
+            #pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
+            out = mx.symbol.Custom(pred_x1=bn_x1,pred_x2=bn_x2,pred_x3=bn_x3,pred_x4=bn_x4,pred_x5=bn_x5,
+                                pred_y1=bn_y1,pred_y2=bn_y2,pred_y3=bn_y3,pred_y4=bn_y4,pred_y5=bn_y5,
                                 target_x1=target_x1,target_x2=target_x2,target_x3=target_x3,target_x4=target_x4,target_x5=target_x5,
                                 target_y1=target_y1,target_y2=target_y2,target_y3=target_y3,target_y4=target_y4,target_y5=target_y5,
                                 op_type='negativemining_onlylandmark10', name="negative_mining") 
             group = mx.symbol.Group([out])
         else:
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 op_type='negativemining_onlylandmark', name="negative_mining")
             group = mx.symbol.Group([out])
         
@@ -2042,26 +2008,26 @@ def L_Net64(mode="train"):
             bn_y3 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=7, end=8)
             bn_y4 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=8, end=9)
             bn_y5 = mx.symbol.slice_axis(data = bn6_3, axis=1, begin=9, end=10)
-            pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
-            pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
-            pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
-            pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
-            pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
-            pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
-            pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
-            pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
-            pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
-            pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
-            out = mx.symbol.Custom(pred_x1=pred_x1,pred_x2=pred_x2,pred_x3=pred_x3,pred_x4=pred_x4,pred_x5=pred_x5,
-                                pred_y1=pred_y1,pred_y2=pred_y2,pred_y3=pred_y3,pred_y4=pred_y4,pred_y5=pred_y5,
+            #pred_x1 = mx.symbol.LinearRegressionOutput(data=bn_x1, label=target_x1, grad_scale=1, name="pred_x1")			
+            #pred_x2 = mx.symbol.LinearRegressionOutput(data=bn_x2, label=target_x2, grad_scale=1, name="pred_x2")			
+            #pred_x3 = mx.symbol.LinearRegressionOutput(data=bn_x3, label=target_x3, grad_scale=1, name="pred_x3")			
+            #pred_x4 = mx.symbol.LinearRegressionOutput(data=bn_x4, label=target_x4, grad_scale=1, name="pred_x4")			
+            #pred_x5 = mx.symbol.LinearRegressionOutput(data=bn_x5, label=target_x5, grad_scale=1, name="pred_x5")			
+            #pred_y1 = mx.symbol.LinearRegressionOutput(data=bn_y1, label=target_y1, grad_scale=1, name="pred_y1")			
+            #pred_y2 = mx.symbol.LinearRegressionOutput(data=bn_y2, label=target_y2, grad_scale=1, name="pred_y2")			
+            #pred_y3 = mx.symbol.LinearRegressionOutput(data=bn_y3, label=target_y3, grad_scale=1, name="pred_y3")			
+            #pred_y4 = mx.symbol.LinearRegressionOutput(data=bn_y4, label=target_y4, grad_scale=1, name="pred_y4")			
+            #pred_y5 = mx.symbol.LinearRegressionOutput(data=bn_y5, label=target_y5, grad_scale=1, name="pred_y5")			
+            out = mx.symbol.Custom(pred_x1=bn_x1,pred_x2=bn_x2,pred_x3=bn_x3,pred_x4=bn_x4,pred_x5=bn_x5,
+                                pred_y1=bn_y1,pred_y2=bn_y2,pred_y3=bn_y3,pred_y4=bn_y4,pred_y5=bn_y5,
                                 target_x1=target_x1,target_x2=target_x2,target_x3=target_x3,target_x4=target_x4,target_x5=target_x5,
                                 target_y1=target_y1,target_y2=target_y2,target_y3=target_y3,target_y4=target_y4,target_y5=target_y5,
                                 op_type='negativemining_onlylandmark10', name="negative_mining") 
             group = mx.symbol.Group([out])
         else:
-            landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                     grad_scale=1, name="landmark_pred")
-            out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+            #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+            #                                         grad_scale=1, name="landmark_pred")
+            out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                                 op_type='negativemining_onlylandmark', name="negative_mining")
             group = mx.symbol.Group([out])
         
@@ -2127,9 +2093,9 @@ def L106_Net(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2211,9 +2177,9 @@ def L106_Net_v2(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2288,9 +2254,9 @@ def L106_Net96_v1(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2386,9 +2352,9 @@ def L106_Net96_v2(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2457,9 +2423,9 @@ def L106_Net96_v3(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2543,9 +2509,9 @@ def L106_Net112_big(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2589,9 +2555,9 @@ def L106_Net112(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2633,9 +2599,9 @@ def L106_Net112_s(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2677,9 +2643,9 @@ def L106_Net96(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2722,9 +2688,9 @@ def L106_Net80(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         
@@ -2766,9 +2732,9 @@ def L106_Net64(mode="train"):
         group = mx.symbol.Group([landmark_pred])
     else:
         
-        landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
-                                                 grad_scale=1, name="landmark_pred")
-        out = mx.symbol.Custom(landmark_pred=landmark_pred, landmark_target=landmark_target, 
+        #landmark_pred = mx.symbol.LinearRegressionOutput(data=bn6_3, label=landmark_target,
+        #                                         grad_scale=1, name="landmark_pred")
+        out = mx.symbol.Custom(landmark_pred=bn6_3, landmark_target=landmark_target, 
                             op_type='negativemining_onlylandmark106', name="negative_mining")
         group = mx.symbol.Group([out])
         

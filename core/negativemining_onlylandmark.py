@@ -32,12 +32,16 @@ class NegativeMiningOperator_OnlyLandmark(mx.operator.CustomOp):
 
 
     def backward(self, req, out_grad, in_data, out_data, in_grad, aux):
+        landmark_pred = in_data[0].asnumpy() # batchsize x 10
+        landmark_target = in_data[1].asnumpy() # batchsize x 10
         landmark_keep = out_data[1].asnumpy().reshape(-1, 1)
+        landmark_keep_repeat = np.repeat(landmark_keep,10,axis=1)
 
-        landmark_grad = np.repeat(landmark_keep, 10, axis=1)
-
+        landmark_grad = 2*(landmark_pred - landmark_target)
         landmark_grad /= len(np.where(landmark_keep == 1)[0])
-
+        landmark_grad *= landmark_keep_repeat * 2
+        #print('backward')
+        
         self.assign(in_grad[0], req[0], mx.nd.array(landmark_grad))
 
 
