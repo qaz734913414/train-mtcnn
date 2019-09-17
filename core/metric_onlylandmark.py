@@ -16,8 +16,8 @@ class LANDMARK_MSE(mx.metric.EvalMetric):
         landmark_keep = preds[1].asnumpy()
         keep = np.where(landmark_keep == 1)[0]
 
-        pred_delta = pred_delta[keep]
-        landmark_target = landmark_target[keep]
+        #pred_delta = pred_delta[keep]
+        #landmark_target = landmark_target[keep]
 
         e = (pred_delta - landmark_target)**2
         error = np.sum(e)
@@ -37,8 +37,8 @@ class LANDMARK_L1(mx.metric.EvalMetric):
         landmark_keep = preds[1].asnumpy()
         keep = np.where(landmark_keep == 1)[0]
 
-        pred_delta = pred_delta[keep]
-        landmark_target = landmark_target[keep]
+        #pred_delta = pred_delta[keep]
+        #landmark_target = landmark_target[keep]
 
         e = abs(pred_delta - landmark_target)
         error = np.sum(e)

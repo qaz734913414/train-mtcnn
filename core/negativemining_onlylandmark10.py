@@ -140,7 +140,10 @@ class NegativeMiningOperator_OnlyLandmark10(mx.operator.CustomOp):
     def backward(self, req, out_grad, in_data, out_data, in_grad, aux):
         for i in range(10):
             keep = out_data[i*2+1].asnumpy().reshape(-1, 1)
+            keep_repeat = np.repeat(landmark_keep,1,axis=1)
+            grad = 2*(in_data[i],asnumpy() - in_data[i+10].asnumpy())
             grad = keep / len(np.where(keep == 1)[0])
+            grad *= keep_repeat
             self.assign(in_grad[i], req[i], mx.nd.array(grad))
 
 

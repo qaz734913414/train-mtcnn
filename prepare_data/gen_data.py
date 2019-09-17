@@ -89,7 +89,10 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
         nx = npr.randint(0, width - cur_size)
         ny = npr.randint(0, height - cur_size)
         crop_box = np.array([nx, ny, nx + cur_size, ny + cur_size])
-        Iou = IoU(crop_box, boxes)
+        if boxes.shape[0] == 0:
+            Iou = 0
+        else:
+            Iou = IoU(crop_box, boxes)
 
         cropped_im = img[ny : ny + cur_size, nx : nx + cur_size, :]
         resized_im = cv2.resize(cropped_im, (size, size), interpolation=cv2.INTER_LINEAR)
@@ -241,7 +244,7 @@ def gen_data(size=20, base_num = 1, prob_thresh = 0.3, thread_num = 4):
 def parse_args():
     parser = argparse.ArgumentParser(description='Train proposal net',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--size', dest='size', help='20 or 24 or 48', default='20', type=str)
+    parser.add_argument('--size', dest='size', help='20(or 16) or 24 or 48', default='20', type=str)
     parser.add_argument('--base_num', dest='base_num', help='base num', default='1', type=str)
     parser.add_argument('--prob_thresh', dest='prob_thresh', help='prob thresh', default='0.3', type=str)
     parser.add_argument('--thread_num', dest='thread_num', help='thread num', default='4', type=str)

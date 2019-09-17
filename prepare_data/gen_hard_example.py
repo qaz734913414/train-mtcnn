@@ -47,7 +47,7 @@ class MyThread_gen(threading.Thread):
 
 def test_net_thread(imdb, mtcnn_detector):
     test_data = TestLoader(imdb)
-    detections = mtcnn_detector.detect_face(imdb, test_data, vis=False)
+    detections = mtcnn_detector.detect_face(imdb, test_data, vis=False, mode='train')
     return detections
 
 def creat_mtcnn_detector(prefix, epoch, batch_size, test_mode, thresh, min_face_size, ctx):
@@ -122,16 +122,16 @@ def test_minibatch(imdb, mtcnn_detectors):
             detections = detections + cur_detections
     return detections
 
-def save_hard_example(annotation_lines, det_boxes, size, thread_num):
+def save_hard_example(annotation_lines, det_boxes, size, thread_num, target_fold):
 
     num_of_images = len(annotation_lines)
-    neg_hard_save_dir = "%s/prepare_data/%d/negative_hard"%(config.root,size)
+    neg_hard_save_dir = "%s/prepare_data/%d/%s"%(config.root,size, target_fold)
     save_path = "%s/prepare_data/%d"%(config.root,size)
     if not os.path.exists(save_path):
         os.mkdir(save_path)
     if not os.path.exists(neg_hard_save_dir):
         os.mkdir(neg_hard_save_dir)
-    f = open(os.path.join(save_path, 'neg_hard.txt'), 'w')
+    f = open(os.path.join(save_path, '%s.txt'%target_fold), 'w')
     
     #print len(det_boxes)
     #print len(det_boxes[0])
@@ -215,7 +215,10 @@ def gen_hard_for_one_image(size, idx, img, det_boxes, gt_boxes,  neg_hard_save_d
             continue
 
         # compute intersection over union(IoU) between current box and all gt boxes
-        Iou = IoU(box, gt_boxes)
+        if gt_boxes.shape[0] == 0:
+            Iou = 0
+        else:
+            Iou = IoU(box, gt_boxes)
         cropped_im = img[y_top:y_bottom + 1, x_left:x_right + 1, :]
         resized_im = cv2.resize(cropped_im, (size, size), interpolation=cv2.INTER_LINEAR)
 
@@ -250,9 +253,11 @@ def parse_args():
     parser.add_argument('--thresh', dest='thresh', help='list of thresh for pnet, rnet, onet',
                         default='0.3,0.3,0.3', type=str)
     parser.add_argument('--min_face', dest='min_face', help='minimum face size for detection',
-                        default=24, type=int)
+                        default=20, type=int)
     parser.add_argument('--target_size', dest='target_size', help='target_size',
                         default=-1, type=int)
+    parser.add_argument('--target_fold', dest='target_fold', help='target_fold',
+                        default='neg_hard', type=str)
     parser.add_argument('--thread_num', dest='thread_num', help='thread num',
                         default=4, type=int)
     parser.add_argument('--gpus', dest='gpus', help='GPU device to train with',
@@ -285,4 +290,4 @@ if __name__ == '__main__':
         size = 48
     if args.target_size > 0:
         size = args.target_size
-    save_hard_example(annotation_lines, detections, size, args.thread_num)
+    save_hard_example(annotation_lines, detections, size, args.thread_num, args.target_fold)

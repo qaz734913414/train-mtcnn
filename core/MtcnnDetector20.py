@@ -192,7 +192,7 @@ class MtcnnDetector(object):
         return return_list
 
 
-    def detect_pnet20(self, im):
+    def detect_pnet20(self, im, mode = 'test'):
         """Get face candidates through pnet
 
         Parameters:
@@ -262,11 +262,13 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
             else:
                 return None, None
 
+            if mode == 'test':
+                keep = py_nms(boxes, 0.7, 'Union')
+                boxes = boxes[keep]
 
-            keep = py_nms(boxes, 0.7, 'Union')
-            boxes = boxes[keep]
-
-            boxes_c = self.calibrate_box(boxes, reg[keep])
+                boxes_c = self.calibrate_box(boxes, reg[keep])
+            else:
+                boxes_c = self.calibrate_box(boxes, reg)
 
         else:
             # fcn
@@ -283,8 +285,9 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
                 if boxes.size == 0:
                     continue
-                keep = py_nms(boxes[:, :5], 0.5, 'Union')
-                boxes = boxes[keep]
+                if mode == 'test':
+                    keep = py_nms(boxes[:, :5], 0.5, 'Union')
+                    boxes = boxes[keep]
                 all_boxes.append(boxes)
 
             if len(all_boxes) == 0:
@@ -293,8 +296,9 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
             all_boxes = np.vstack(all_boxes)
 
             # merge the detection from first stage
-            keep = py_nms(all_boxes[:, 0:5], 0.7, 'Union')
-            all_boxes = all_boxes[keep]
+            if mode == 'test':
+                keep = py_nms(all_boxes[:, 0:5], 0.7, 'Union')
+                all_boxes = all_boxes[keep]
             boxes = all_boxes[:, :5]
 
             bbw = all_boxes[:, 2] - all_boxes[:, 0] + 1
@@ -310,7 +314,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
         return boxes, boxes_c
 
-    def detect_rnet(self, im, dets):
+    def detect_rnet(self, im, dets, mode = 'test'):
         """Get face candidates using rnet
 
         Parameters:
@@ -361,14 +365,17 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         else:
             return None, None
 
-        keep = py_nms(boxes, 0.7)
-        boxes = boxes[keep]
+        if mode == 'test':
+            keep = py_nms(boxes, 0.7)
+            boxes = boxes[keep]
 
-        boxes_c = self.calibrate_box(boxes, reg[keep])
+            boxes_c = self.calibrate_box(boxes, reg[keep])
+        else:
+            boxes_c = self.calibrate_box(boxes, reg)
 
         return boxes, boxes_c
 
-    def detect_onet(self, im, dets):
+    def detect_onet(self, im, dets, mode = 'test'):
         """Get face candidates using onet
 
         Parameters:
@@ -421,13 +428,14 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
         boxes_c = self.calibrate_box(boxes, reg)
 
-        keep = py_nms(boxes_c, 0.7, "Minimum")
-        boxes_c = boxes_c[keep]
+        if mode == 'test':
+            keep = py_nms(boxes_c, 0.7, "Minimum")
+            boxes_c = boxes_c[keep]
 
         return boxes, boxes_c
 
 
-    def detect_face(self, imdb, test_data, vis):
+    def detect_face(self, imdb, test_data, vis, mode = 'test'):
         """Detect face over image
 
         Parameters:
@@ -492,7 +500,10 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
                 t = time.time()
                 print "time cost " + '{:.3f}'.format(t1+t2+t3) + '  pnet {:.3f}  rnet {:.3f}  onet {:.3f}'.format(t1, t2, t3)
 
-            all_boxes.append(boxes_c)
+            if mode == 'train':
+                all_boxes.append(boxes)
+            else:
+                all_boxes.append(boxes_c)
             batch_idx += 1
         # save detections into fddb format
 #        imdb.write_results(all_boxes)

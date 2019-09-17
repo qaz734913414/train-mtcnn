@@ -17,10 +17,10 @@ def train_L_net(image_set, root_path, dataset_path, prefix, ctx,
               48, False, False, True, frequent, not resume, lr, lr_epoch)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train O_net(48-net)',
+    parser = argparse.ArgumentParser(description='Train L_Net(48-net)',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--image_set', dest='image_set', help='training set',
-                        default='train_48l', type=str)
+                        default='img_cut_celeba', type=str)
     parser.add_argument('--root_path', dest='root_path', help='output data folder',
                         default='data', type=str)
     parser.add_argument('--dataset_path', dest='dataset_path', help='dataset folder',

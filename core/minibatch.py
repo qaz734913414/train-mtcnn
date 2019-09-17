@@ -37,6 +37,9 @@ def get_minibatch_thread(imdb, num_classes, im_size, with_type, with_cls, with_b
         if with_cls:
             cls = imdb[i]['label']
             cls_label.append(cls)
+            if config.enable_black_border:
+                fill_len = np.random.randint(0,im_size*0.6)
+                im[:,0:fill_len,:] = 128
         if with_bbox:
             bbox_target = imdb[i]['bbox_target']
             bbox_reg_target.append(bbox_target)
@@ -56,10 +59,10 @@ def get_minibatch_thread(imdb, num_classes, im_size, with_type, with_cls, with_b
     return processed_ims, cls_label, type_label, bbox_reg_target, landmark_reg_target
 
 def get_minibatch(imdb, num_classes, im_size, with_type, with_cls, with_bbox, with_landmark, thread_num = 4):
-    # im_size: 12, 24 or 48
+    # im_size: 16/20, 24 or 48
     #flag = np.random.randint(3,size=1)
     num_images = len(imdb)
-    thread_num = max(2,thread_num)
+    thread_num = max(1,thread_num)
     num_per_thread = math.ceil(float(num_images)/thread_num)
     #print(num_per_thread)
     threads = []
